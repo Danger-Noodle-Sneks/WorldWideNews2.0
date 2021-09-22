@@ -85,6 +85,32 @@ describe('React unit tests', () => {
     });
   });
 
+  describe('FavoritedPost', () => {
+    let wrapper;
+    const props = {
+      title: 'Crazy Title Name',
+      link: 'Link',
+      deleteFavorite: jest.fn(),
+    };
+
+    beforeAll(() => {
+      wrapper = shallow(<FavoritedPost {...props} />);
+    });
+
+    it('Renders an <a> element with the title as text', () => {
+      expect(wrapper.find('a').text().includes(props.title)).toBe(true);
+    });
+
+    it('Removes previously favorited post', () => {
+      wrapper.find('span').simulate('click');
+      expect(props.deleteFavorite).toHaveBeenCalled();
+    });
+    
+    it('Renders an <a> element with the link as the href', () => {
+      expect(wrapper.find('a').at(0).props().href).toEqual(props.link);
+    });
+  });
+
   describe('NewsFeed', () => {
     let wrapper;
     const props = {
@@ -118,29 +144,5 @@ describe('React unit tests', () => {
     });
   });
 
-  describe('FavoritedPost', () => {
-    let wrapper;
-    const props = {
-      title: 'Crazy Title Name',
-      link: 'Link',
-      deleteFavorite: jest.fn(),
-    };
-
-    beforeAll(() => {
-      wrapper = shallow(<FavoritedPost {...props} />);
-    });
-
-    it('Renders an <a> element with the title as text', () => {
-      expect(wrapper.find('a').text().includes(props.title)).toBe(true);
-    });
-
-    it('Removes previously favorited post', () => {
-      wrapper.find('span').simulate('click');
-      expect(props.deleteFavorite).toHaveBeenCalled();
-    });
-    
-    it('Renders an <a> element with the link as the href', () => {
-      expect(wrapper.find('a').at(0).props().href).toEqual(props.link);
-    });
-  });
+  
 });
