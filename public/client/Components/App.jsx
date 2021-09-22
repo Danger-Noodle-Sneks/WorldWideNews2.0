@@ -5,7 +5,10 @@
 
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { faBookmark } from '@fortawesome/free-solid-svg-icons';
 import fetch from 'isomorphic-fetch';
+import { faBookmark } from '@fortawesome/free-solid-svg-icons';
 import Map from './Map.jsx';
 import LogIn from './LogIn.jsx';
 import Welcome from './Welcome.jsx';
@@ -20,7 +23,7 @@ function App() {
   const [currentUser, changeUser] = useState(null);
   const [currentCountryClick, setCurrentCountryClick] = useState(null);
   const [posts, setPosts] = useState([]);
-  const [rendering, setRendering] = useState('notLoggedIn');
+  const [rendering, setRendering] = useState('showFav');
 
   const loginButton = (e) => {
     const username = document.querySelector('#username');
@@ -124,6 +127,8 @@ function App() {
     });
   };
 
+  const faTimesX = <span id="fullStar" onClick={() => setRendering('showFav')}><FontAwesomeIcon icon={faBookmark} /></span>;
+
   const signOut = () => {
     changeLoginStatus(false);
     changeAttempt(null);
@@ -132,8 +137,7 @@ function App() {
     setCurrentCountryClick(null);
     setPosts([]);
   };
-
-  // If login status is false, return the login page
+  // if not logged in, render the login page
   if (loginStatus == false) {
     return (
       <BrowserRouter>
@@ -143,29 +147,20 @@ function App() {
       </BrowserRouter>
     );
   }
-  //else if logged in, then return the map
+  // else if logged in, then return the map
   return (
     <div className="wrapper">
       {!loginStatus
         ? <LogIn loginButton={loginButton} signUp={signUp} loginAttempt={loginAttempt} /> : <Welcome key={1} currentUser={currentUser} signOut={signOut} />}
       {/* <Welcome key={1} currentUser={currentUser} signOut={signOut} /> */}
-      <Map
-        setCurrentCountryClick={setCurrentCountryClick}
-        getPosts={getPosts}
-      />
-      <NewsFeed
-        currentCountryClick={currentCountryClick}
-        posts={posts}
-        currentFavorites={currentFavorites}
-        setFavorites={setFavorites}
-        addFavorite={addFavorite}
-        deleteFavorite={deleteFavorite}
-      />
+      {/* <button className="backToFavs" onClick={() => setRendering('showFav')}>X</button> */}
+      {faTimesX}
 
-      <FavoriteList
-        currentFavorites={currentFavorites}
-        deleteFavorite={deleteFavorite}
-      />
+      <Map setCurrentCountryClick={setCurrentCountryClick} getPosts={getPosts} setRendering={setRendering} />
+      {(loginStatus == true && rendering == 'showFav')
+        ? <FavoriteList currentFavorites={currentFavorites} deleteFavorite={deleteFavorite} />
+        : <NewsFeed currentCountryClick={currentCountryClick} posts={posts} currentFavorites={currentFavorites} setFavorites={setFavorites} addFavorite={addFavorite} deleteFavorite={deleteFavorite} />}
+
     </div>
   );
 }
