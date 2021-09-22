@@ -3,7 +3,6 @@ import { Link, NavLink } from 'react-router-dom';
 import GoogleLogin from 'react-google-login';
 // import { BrowserRouter, Route, Link } from "react-router-dom";
 // import { render } from 'sass';
-import imgBack from '../scss/97e05f8a5ace9f39b1d004d431f8a7b7.jpg';
 
 const LoginPage = (props) => {
   const {
@@ -25,30 +24,30 @@ const LoginPage = (props) => {
         <input name="password" placeholder="password" id="password" autoComplete="off" type="password" />
       </div>
 
-        <div id="buttonsDiv">
-          <button type="button" id="loginBtn" onClick={loginButton} value="Log-In">Log In</button>
-          <button id="forgotPassword"> Forgot password?</button>
-        </div>
+      <div id="buttonsDiv">
+        <button type="button" id="loginBtn" onClick={loginButton} value="Log-In">Log In</button>
+        <button id="forgotPassword"> Forgot password?</button>
+      </div>
 
-        <div id="buttonsDivSignUp">
-          <p id="or">OR</p>
+      <div id="buttonsDivSignUp">
+        <p id="or">OR</p>
 
-          <GoogleLogin
-            clientId="476477218164-tvc3q7g5c9tgem4cqtdq39d4894b2qlu.apps.googleusercontent.com"
-            buttonText="Login with Google"
-            onSuccess={googleLogin}
-            onFailure={loginAttempt}
-            cookiePolicy="single_host_origin"
-          />
-          <div id="signUpArea">
+        <GoogleLogin
+          clientId="476477218164-tvc3q7g5c9tgem4cqtdq39d4894b2qlu.apps.googleusercontent.com"
+          buttonText="Login with Google"
+          onSuccess={googleLogin}
+          onFailure={loginAttempt}
+          cookiePolicy="single_host_origin"
+        />
+        <div id="signUpArea">
           <h2> Don't have an account? </h2>
           <button type="button" onClick={signUp} id="signupBtn" value="Sign-Up">Sign up</button>
-          </div>
         </div>
-        <div id="loginAttemptMessage">
-          {loginAttempt}
-        </div>
-      
+      </div>
+      <div id="loginAttemptMessage">
+        {loginAttempt}
+      </div>
+
     </div>
   );
 };

@@ -11,7 +11,7 @@ function Welcome(props) {
       <div>
         {currentUser}
       </div>
-<<<<<<< HEAD
+
       {currentUser}
       {signInWithGoogle
         ? (
@@ -23,9 +23,6 @@ function Welcome(props) {
           />
         )
         : (<Button key={1} signOut={signOut} />)}
-=======
-      <Button key={1} onClick={signOut} />
->>>>>>> 263580d05ced0ee4c175599f22a29e8e94c254d7
 
     </div>
   );
