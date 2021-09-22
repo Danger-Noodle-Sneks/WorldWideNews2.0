@@ -2,10 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 function Button(props) {
-  const { signOut } = props;
-  console.log(props)
+  const { onClick } = props;
   return (
-      <button id="signOutButton" onClick={signOut}>
+      <button id="signOutButton" onClick={onClick}>
         Sign Out
       </button>
   );

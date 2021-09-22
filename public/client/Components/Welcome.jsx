@@ -12,7 +12,7 @@ function Welcome(props) {
       <div>
         {currentUser}
       </div>
-      <Button key={1} signOut={signOut} />
+      <Button key={1} onClick={signOut} />
 
     </div>
   );

@@ -154,10 +154,8 @@ function App() {
         getPosts={getPosts}
       />
       <NewsFeed
-        currentCountryClick={currentCountryClick}
         posts={posts}
         currentFavorites={currentFavorites}
-        setFavorites={setFavorites}
         addFavorite={addFavorite}
         deleteFavorite={deleteFavorite}
       />
