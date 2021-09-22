@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 mapboxGl.accessToken = 'pk.eyJ1IjoibGlhbWZvbnRlcyIsImEiOiJja3RsbzdjdmQxeGZxMnBwODJ1aWlpMjgwIn0.tQGIes1AYOO8KIoAJYHTzQ';
 
 function Map(props) {
-  const { setCurrentCountryClick, getPosts } = props;
+  const { setCurrentCountryClick, getPosts,setRendering } = props;
 
   let popup;
   let populationData;
@@ -174,6 +174,7 @@ function Map(props) {
           if (clickCountryId !== previousCountryClicked) {
             setCurrentCountryClick(countryName);
             getPosts(countryName);
+            setRendering('showNews');
             previousCountryClicked = clickCountryId;
           }
 

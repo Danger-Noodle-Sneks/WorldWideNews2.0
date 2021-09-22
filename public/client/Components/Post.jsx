@@ -16,7 +16,7 @@ const Post = (props) => {
 
   const starEmpty = <span id="emptyStar" onClick={() => addFavorite(title, link)}><FontAwesomeIcon icon={faStarEmpty} /></span>;
   const starFull = <span id="fullStar" onClick={() => deleteFavorite(title)}><FontAwesomeIcon icon={faStarFilled} /></span>;
-
+  
   return (
     <section name="Post" id="individualPostWrapper">
       <div name="Post Title" id="title">
