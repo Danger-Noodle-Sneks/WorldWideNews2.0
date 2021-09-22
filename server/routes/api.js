@@ -28,6 +28,12 @@ router.post('/addFav',
     res.status(200).json(res.locals.user);
   });
 
+router.post('/loginWithGoogle',
+  apiController.googleSignIn, apiController.getUserData,
+  (req, res) => {
+    res.status(200).json(res.locals.data);
+  });
+
 // route and middlewares to execute when user wants to delete a favourite link
 router.delete('/deleteFav', apiController.deleteFav, (req, res) => {
   res.status(200).json(res.locals.user);
