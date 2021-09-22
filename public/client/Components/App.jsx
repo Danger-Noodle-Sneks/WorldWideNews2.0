@@ -4,7 +4,7 @@
 // HELLO
 
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter, Route, Link } from "react-router-dom";
+import { BrowserRouter, Route, Link } from 'react-router-dom';
 import fetch from 'isomorphic-fetch';
 import Map from './Map.jsx';
 import LogIn from './LogIn.jsx';
@@ -133,30 +133,21 @@ function App() {
     setPosts([]);
   };
 
-  // if (rendering == 'notLoggedIn') {
-  //   return (
-  //     <div>
-  //       Login to go to the map ->   
-  //       <button onClick={() => setRendering('isLoggedIn')}>  Login</button>
-  //     </div>
-  //   );
-  // }
-  if (loginStatus == false) { 
+  // If login status is false, return the login page
+  if (loginStatus == false) {
     return (
       <BrowserRouter>
-      <div>
-        <LoginPage loginButton={loginButton} signUp={signUp} loginAttempt={loginAttempt} />
-      </div>
+        <div>
+          <LoginPage loginButton={loginButton} signUp={signUp} loginAttempt={loginAttempt} />
+        </div>
       </BrowserRouter>
-    )
+    );
   }
-
+  //else if logged in, then return the map
   return (
     <div className="wrapper">
-      {/* <h2 class = "header">World Wide News</h2>
-      <h6 class="header">Always with the news..</h6> */}
       {!loginStatus
-        ? <LogIn loginButton={loginButton} signUp={signUp} loginAttempt={loginAttempt} />: <Welcome key={1} currentUser={currentUser} signOut={signOut} />}
+        ? <LogIn loginButton={loginButton} signUp={signUp} loginAttempt={loginAttempt} /> : <Welcome key={1} currentUser={currentUser} signOut={signOut} />}
       {/* <Welcome key={1} currentUser={currentUser} signOut={signOut} /> */}
       <Map
         setCurrentCountryClick={setCurrentCountryClick}
