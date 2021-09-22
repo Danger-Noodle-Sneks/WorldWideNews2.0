@@ -171,6 +171,8 @@ apiController.addFav = async (req, res, next) => {
       favorites: { title, link },
     };
 
+    if (!currentUser) return res.status(500).send('Please log in to save favorites');
+
     await models.Users.findOneAndUpdate(query, { $push: update });
 
     console.log(`${currentUser} added title: ${title}, link: ${link}`);
@@ -198,6 +200,7 @@ apiController.deleteFav = async (req, res, next) => {
       favorites: { title, link },
     };
 
+    if (!currentUser) return res.status(500).send('Please log in to delete favorites');
     await models.Users.findOneAndUpdate(query, { $pull: update });
 
     console.log(`${currentUser} deleted title: ${title}, link: ${link}`);

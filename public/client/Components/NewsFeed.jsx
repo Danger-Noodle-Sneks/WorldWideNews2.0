@@ -3,7 +3,7 @@ import Post from './Post.jsx';
 
 const Newsfeed = (props) => {
   const {
-    currentCountryClick, posts, currentFavorites, setFavorites, addFavorite, deleteFavorite,
+    posts, currentFavorites, addFavorite, deleteFavorite,
   } = props;
 
   const createPosts = (postData) => {
@@ -14,7 +14,6 @@ const Newsfeed = (props) => {
         summary={post.summary}
         link={post.link}
         currentFavorites={currentFavorites}
-        setFavorites={setFavorites}
         addFavorite={addFavorite}
         deleteFavorite={deleteFavorite}
       />
