@@ -1,15 +1,17 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable react/no-array-index-key */
 
-//HELLO
+// HELLO
 
 import React, { useEffect, useState } from 'react';
+import { BrowserRouter, Route, Link } from "react-router-dom";
 import fetch from 'isomorphic-fetch';
 import Map from './Map.jsx';
 import LogIn from './LogIn.jsx';
 import Welcome from './Welcome.jsx';
 import FavoriteList from './FavoriteList.jsx';
 import NewsFeed from './NewsFeed.jsx';
+import LoginPage from './LoginPage.jsx';
 
 function App() {
   const [currentFavorites, setFavorites] = useState({});
@@ -18,6 +20,7 @@ function App() {
   const [currentUser, changeUser] = useState(null);
   const [currentCountryClick, setCurrentCountryClick] = useState(null);
   const [posts, setPosts] = useState([]);
+  const [rendering, setRendering] = useState('notLoggedIn');
 
   const loginButton = (e) => {
     const username = document.querySelector('#username');
@@ -130,8 +133,28 @@ function App() {
     setPosts([]);
   };
 
+  // if (rendering == 'notLoggedIn') {
+  //   return (
+  //     <div>
+  //       Login to go to the map ->   
+  //       <button onClick={() => setRendering('isLoggedIn')}>  Login</button>
+  //     </div>
+  //   );
+  // }
+  if (loginStatus == false) { 
+    return (
+      <BrowserRouter>
+      <div>
+        <LoginPage loginButton={loginButton} signUp={signUp} loginAttempt={loginAttempt} />
+      </div>
+      </BrowserRouter>
+    )
+  }
+
   return (
     <div className="wrapper">
+      {/* <h2 class = "header">World Wide News</h2>
+      <h6 class="header">Always with the news..</h6> */}
       {!loginStatus
         ? <LogIn loginButton={loginButton} signUp={signUp} loginAttempt={loginAttempt} />
         : <Welcome key={1} currentUser={currentUser} signOut={signOut} />}
