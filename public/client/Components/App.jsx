@@ -156,8 +156,8 @@ function App() {
       {/* <h2 class = "header">World Wide News</h2>
       <h6 class="header">Always with the news..</h6> */}
       {!loginStatus
-        ? <LogIn loginButton={loginButton} signUp={signUp} loginAttempt={loginAttempt} />
-        : <Welcome key={1} currentUser={currentUser} signOut={signOut} />}
+        ? <LogIn loginButton={loginButton} signUp={signUp} loginAttempt={loginAttempt} />: <Welcome key={1} currentUser={currentUser} signOut={signOut} />}
+      {/* <Welcome key={1} currentUser={currentUser} signOut={signOut} /> */}
       <Map
         setCurrentCountryClick={setCurrentCountryClick}
         getPosts={getPosts}
