@@ -4,7 +4,6 @@ import { faStar as faStarFilled } from '@fortawesome/free-solid-svg-icons';
 import { faStar as faStarEmpty } from '@fortawesome/free-regular-svg-icons';
 import PropTypes from 'prop-types';
 
-
 const Post = (props) => {
   const {
     title, summary, link, currentFavorites, addFavorite, deleteFavorite,
@@ -16,13 +15,13 @@ const Post = (props) => {
 
   const starEmpty = <span id="emptyStar" onClick={() => addFavorite(title, link)}><FontAwesomeIcon icon={faStarEmpty} /></span>;
   const starFull = <span id="fullStar" onClick={() => deleteFavorite(title)}><FontAwesomeIcon icon={faStarFilled} /></span>;
-  
+
   return (
     <section name="Post" id="individualPostWrapper">
       <div name="Post Title" id="title">
         Title:
         {' '}
-        <a href={link}>{title}</a>
+        <a href={link} target="_blank" rel="noreferrer">{title}</a>
         {' '}
         {favorited ? starFull : starEmpty}
         <p name="Article Summary" id="summary">
