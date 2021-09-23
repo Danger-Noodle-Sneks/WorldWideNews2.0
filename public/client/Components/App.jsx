@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { faBookmark } from '@fortawesome/free-solid-svg-icons';
 import fetch from 'isomorphic-fetch';
 import { faBookmark } from '@fortawesome/free-solid-svg-icons';
 import Map from './Map.jsx';
@@ -23,7 +22,6 @@ function App() {
   const [checkedCookies, checkingCookies] = useState(false);
 
   const grabFavoritesFromDB = (data, name) => {
-    if (!Array.isArray(data)) throw Error('wrong');
     if (Array.isArray(data)) {
       setFavorites({});
       const favoritesObj = {};
@@ -114,12 +112,14 @@ function App() {
 
   const googleLogin = (response) => {
     const { name, googleId } = response.profileObj;
+    const nameNoSpace = name.replace(' ', '');
     const user = {
-      username: name,
+      username: nameNoSpace,
       password: googleId,
     };
+    console.log(user)
     changeSignInWithGoogle(true);
-    fetch('/api/loginWithGoogle', {
+    fetch(`/user/loginWithGoogle/${nameNoSpace}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(user),
@@ -127,7 +127,7 @@ function App() {
     })
       .then((res) => res.json())
       .then((data) => {
-        grabFavoritesFromDB(data, name);
+        grabFavoritesFromDB(data, nameNoSpace);
       })
 
       .catch((err) => console.log(err, 'error at google sign in'));
@@ -143,7 +143,7 @@ function App() {
     const currentFavoritesCopy = { ...currentFavorites };
     const favoriteUpdate = Object.assign(currentFavoritesCopy, { [title]: link });
     setFavorites(favoriteUpdate);
-    fetch('/api/addFav', {
+    fetch('/user/addFav', {
       method: 'POST',
       body: JSON.stringify({ currentUser, title, link }),
       headers: {
@@ -156,7 +156,7 @@ function App() {
     const currentFavoritesCopy = { ...currentFavorites };
     delete currentFavoritesCopy[title];
     setFavorites(currentFavoritesCopy);
-    fetch('/api/deleteFav', {
+    fetch('/user/deleteFav', {
       method: 'DELETE',
       body: JSON.stringify({ currentUser, title, link }),
       headers: {
