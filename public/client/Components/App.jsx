@@ -1,8 +1,5 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable react/no-array-index-key */
-
-// HELLO
-
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Link } from 'react-router-dom';
 import fetch from 'isomorphic-fetch';
@@ -18,7 +15,6 @@ function App() {
   const [loginStatus, changeLoginStatus] = useState(false);
   const [loginAttempt, changeAttempt] = useState(null);
   const [currentUser, changeUser] = useState(null);
-  const [currentCountryClick, setCurrentCountryClick] = useState(null);
   const [posts, setPosts] = useState([]);
   const [rendering, setRendering] = useState('notLoggedIn');
 
@@ -58,7 +54,7 @@ function App() {
     }
   };
 
-  const signUp = (e) => {
+  const signUp = () => {
     const username = document.querySelector('#username');
     const password = document.querySelector('#password');
 
@@ -89,13 +85,10 @@ function App() {
     }
   };
 
-  const getPosts = (countryName) => {
-    setTimeout(async () => {
-      const postFetchData = await fetch(`/api/getArticles/${countryName}`);
-      const postsArr = await postFetchData.json();
-      setPosts(postsArr);
-    },
-    1000);
+  const getPosts = async (countryName) => {
+    const postFetchData = await fetch(`/api/getArticles/${countryName}`);
+    const postsArr = await postFetchData.json();
+    setPosts(postsArr);
   };
 
   const addFavorite = (title, link) => {
@@ -129,12 +122,11 @@ function App() {
     changeAttempt(null);
     setFavorites({});
     changeUser(null);
-    setCurrentCountryClick(null);
     setPosts([]);
   };
 
   // If login status is false, return the login page
-  if (loginStatus == false) {
+  if (loginStatus === false) {
     return (
       <BrowserRouter>
         <div>
@@ -143,14 +135,14 @@ function App() {
       </BrowserRouter>
     );
   }
-  //else if logged in, then return the map
+  // else if logged in, then return the map
   return (
     <div className="wrapper">
       {!loginStatus
-        ? <LogIn loginButton={loginButton} signUp={signUp} loginAttempt={loginAttempt} /> : <Welcome key={1} currentUser={currentUser} signOut={signOut} />}
+        ? <LogIn loginButton={loginButton} signUp={signUp} loginAttempt={loginAttempt} />
+        : <Welcome key={1} currentUser={currentUser} signOut={signOut} />}
       {/* <Welcome key={1} currentUser={currentUser} signOut={signOut} /> */}
       <Map
-        setCurrentCountryClick={setCurrentCountryClick}
         getPosts={getPosts}
       />
       <NewsFeed

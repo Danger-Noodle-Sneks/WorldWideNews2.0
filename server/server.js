@@ -1,22 +1,24 @@
 const express = require('express');
+const cookieParser = require('cookie-parser');
 
 const app = express();
 const path = require('path');
 
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+const sessionController = require('./controllers/sessionController');
 
 // eslint-disable-next-line import/no-dynamic-require
 const apiRouter = require(path.join(__dirname, 'routes/api.js'));
 
 if (process.env.NODE_ENV === 'production') {
-  app.use('/build', express.static(path.join(__dirname, '../build')));
-
-  app.get('/', (req, res) => res.status(200).sendFile(path.join(__dirname, '../public/index.html')));
+  // app.use('/build', express.static(path.join(__dirname, '../build')));
 }
 
-app.use('/api', apiRouter);
+app.get('/', sessionController.isLoggedIn, (req, res) => res.status(204).sendFile(path.join(__dirname, '../public/app.jsx')));
 
+app.use('/api', apiRouter);
 app.use('/*', (req, res) => {
   res.status(404).sendFile(path.join(__dirname, '../public/client/HTML404Page.html'));
 });

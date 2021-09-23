@@ -11,9 +11,9 @@ const LoginPage = (props) => {
   // const {signOut} = props;
 
   return (
-    <div class="loginWrapper">
-      <h1 class = "header">World Wide News</h1>
-      <h6 class="header">Always with the news..</h6>
+    <div className="loginWrapper">
+      <h1 className = "header">World Wide News</h1>
+      <h6 className="header">Always with the news..</h6>
       <div id="inputButtonWrapper">
         <p><input name="username" placeholder="username" id="username" autoComplete="off" /></p>
         <p><input name="password" placeholder="password" id="password" autoComplete="off" type="password" /></p>

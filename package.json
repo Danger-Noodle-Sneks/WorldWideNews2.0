@@ -28,6 +28,7 @@
     "axios": "^0.21.4",
     "bcryptjs": "^2.4.3",
     "browserify": "^17.0.0",
+    "cookie-parser": "^1.4.5",
     "express": "^4.12.3",
     "mapbox-gl": "^2.4.1",
     "mongoose": "^6.0.6",

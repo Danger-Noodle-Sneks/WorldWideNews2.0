@@ -34,7 +34,7 @@ module.exports = {
       template: path.join(__dirname, 'public', 'index.html'),
     }),
     new MiniCssExtractPlugin(),
-    new BundleAnalyzerPlugin(),
+    // new BundleAnalyzerPlugin(),
   ],
 
   module: {
