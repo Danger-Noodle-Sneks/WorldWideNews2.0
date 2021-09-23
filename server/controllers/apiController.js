@@ -5,7 +5,19 @@ const models = require('../models/mapModels');
 const apiController = {};
 
 apiController.getPopulationData = (req, res, next) => {
-  const { countryName } = req.params;
+  let { countryName } = req.params;
+  const alternateCountryNames = {
+    ['Democratic Republic of the Congo']:'DR Congo',
+    ['Republic of the Congo']:'Congo',
+    ['Brunei']:'Brunei ',
+    ['Czechia']: 'Czech Republic (Czechia)',
+    ['Virgin Islands']:'U.S. Virgin Islands',
+    ['Saint Kitts and Nevis']:'Saint Kitts & Nevis',
+    ['Saint Vincent and the Grenadines']:'St. Vincent & Grenadines',
+    ['Ivory Coast']:'Côte d\'Ivoire',
+  };
+  // console.log(countryName.toString())
+  if (alternateCountryNames[countryName]) countryName = alternateCountryNames[countryName];
   const populationRequest = {
     method: 'GET',
     url: 'https://world-population.p.rapidapi.com/population',
@@ -38,7 +50,7 @@ apiController.getArticles = async (req, res, next) => {
     method: 'GET',
     url: 'https://free-news.p.rapidapi.com/v1/search',
     params: {
-      q: countryName, lang: 'en', page: '1', page_size: '5',
+      q: countryName, lang: 'en', page: '1', page_size: '15',
     },
     headers: {
       'x-rapidapi-key':
@@ -50,19 +62,24 @@ apiController.getArticles = async (req, res, next) => {
 
   axios.request(requestDetails)
     .then((response) => {
-      // iterate through the articles recieved and save the required fields in a new object
-      const articles = response.data.articles.map((elem) => {
-        const objOut = {
-          title: elem.title,
-          summary: elem.summary,
-          link: elem.link,
-          media: elem.media,
-        };
-        return objOut;
-      });
 
-      // assign it to res.locals and send back
-      res.locals.articles = articles;
+      // iterate through the articles recieved and save the required fields in a new object
+
+      // Filter out articles with repeated titles
+      const previousTitles = {};
+      const articles = response.data.articles.map((elem) => {
+        if (!previousTitles[elem.title]) {
+          previousTitles[elem.title] = true;
+          return {
+            title: elem.title,
+            summary: elem.summary,
+            link: elem.link,
+            media: elem.media,
+          };
+        }
+      });
+      const articlesFiltered = articles.filter(post => post !== undefined);
+      res.locals.articles = articlesFiltered;
 
       return next();
     }).catch((err) => {
