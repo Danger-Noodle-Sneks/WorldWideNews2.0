@@ -17,6 +17,25 @@ function App() {
   const [currentUser, changeUser] = useState(null);
   const [posts, setPosts] = useState([]);
   const [rendering, setRendering] = useState('notLoggedIn');
+  const [checkedCookies, checkingCookies] = useState(false);
+
+  const continueUserSession = async () => {
+    if (!checkedCookies) {
+      const res = await (await fetch('/sessionCheck')).json();
+      if (res.length > 0) {
+        const favArticles = {}
+        const [username,articles] = res;
+        articles.forEach( elem =>{
+          favArticles[elem.title] = elem.link;
+        })
+        changeLoginStatus(true);
+        changeUser(username);
+        setFavorites(favArticles);
+        checkingCookies(true);
+      }
+    }
+  };
+  if (!checkedCookies) continueUserSession();
 
   const loginButton = (e) => {
     const username = document.querySelector('#username');
@@ -117,7 +136,8 @@ function App() {
     });
   };
 
-  const signOut = () => {
+  const signOut = async () => {
+    fetch('/signout');
     changeLoginStatus(false);
     changeAttempt(null);
     setFavorites({});

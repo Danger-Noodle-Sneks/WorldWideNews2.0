@@ -1,16 +1,13 @@
 const cookieController = {};
 
-cookieController.setCookie = (req, res, next) => {
-  // write code here
-  res.cookie('codesmith', 'hi');
-  const value = Math.floor(Math.random() * 100);
-  res.cookie('secret', `${value}`);
-
+cookieController.deleteCookies = (req, res, next) => {  
+  res.clearCookie('ssid')
   next();
 };
+
 cookieController.setSSIDCookie = (req, res, next) => {
   const cookieOptions = {
-    maxAge: 60000, // ms
+    maxAge: 120000, // ms
     httpOnly: true,
   };
 

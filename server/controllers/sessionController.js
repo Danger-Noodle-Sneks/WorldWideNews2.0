@@ -2,42 +2,68 @@ const models = require('../models/mapModels');
 
 const sessionController = {};
 
-/**
-* isLoggedIn - find the appropriate session for this request in the database, then
-* verify whether or not the session is still valid.
-*/
-
-// const sessionSchema = new Schema({
-//   cookieId: { type: String, required: true, unique: true },
-//   createdAt: { type: Date, expires: 30, default: Date.now }
-// });
-
-// Whenever someone is at homepage, check if their cookie matches the db
-// if it does, log them in
-
-// Start someones session whenever they log-in/sign-up
-
-sessionController.isLoggedIn = (req, res, next) => {
-  // write code here
-  res.cookie('test2', 'yee2t');
-
-  return next();
+sessionController.isLoggedIn = async (req, res, next) => {
+  try {
+    const { ssid } = req.cookies;
+    if (ssid) {
+      const cookieCheck = await models.Session.findOne({ cookieId: ssid });
+      if (cookieCheck) {
+        res.locals.user = ssid;
+        return next();
+      } throw Error('No cookie in DB');
+    }
+    throw Error('No cookie in DB');
+  } catch (err) {
+    const defaultErr = {
+      log: 'Error handler caught an error inside sessionController.isLoggedIn',
+      status: 200,
+      message: { err: `An error occurred inside a middleware named sessionController.isLoggedIn : ${err}` },
+    };
+    return next(defaultErr);
+  }
 };
 
 /**
 * startSession - create and save a new Session into the database.
 */
 sessionController.startSession = async (req, res, next) => {
-  // write code here
+  try {
+    // check is session already exists
+    const session = await models.Session.findOne({ cookieId: res.locals.user });
 
-  // create new session document
-  const newSession = {
-    cookieId: res.locals.user,
-  };
+    if (!session) {
+    // create new session document
+      const newSession = {
+        cookieId: res.locals.user,
+      };
 
-  await models.Session.create(newSession);
+      await models.Session.create(newSession);
+    }
+    next();
+  } catch (err) {
+    const defaultErr = {
+      log: 'Error handler caught an error inside sessionController.startSession',
+      status: 500,
+      message: { err: `An error occurred inside a middleware named sessionController.startSession : ${err}` },
+    };
+    return next(defaultErr);
+  }
+};
 
-  next();
+sessionController.endSession = async (req, res, next) => {
+  try {
+    const { ssid } = req.cookies;
+    await models.Session.findOneAndDelete({ cookieId: ssid });
+    res.locals.id = ssid;
+    next();
+  } catch (err) {
+    const defaultErr = {
+      log: 'Error handler caught an error inside sessionController.endSession',
+      status: 500,
+      message: { err: `An error occurred inside a middleware named sessionController.endSession : ${err}` },
+    };
+    return next(defaultErr);
+  }
 };
 
 module.exports = sessionController;
