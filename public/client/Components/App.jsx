@@ -5,7 +5,10 @@
 
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { faBookmark } from '@fortawesome/free-solid-svg-icons';
 import fetch from 'isomorphic-fetch';
+import { faBookmark } from '@fortawesome/free-solid-svg-icons';
 import Map from './Map.jsx';
 import Welcome from './Welcome.jsx';
 import FavoriteList from './FavoriteList.jsx';
@@ -19,7 +22,7 @@ function App() {
   const [currentUser, changeUser] = useState(null);
   const [currentCountryClick, setCurrentCountryClick] = useState(null);
   const [posts, setPosts] = useState([]);
-  const [rendering, setRendering] = useState('notLoggedIn');
+  const [rendering, setRendering] = useState('showFav');
   const [signInWithGoogle, changeSignInWithGoogle] = useState(false);
 
   const grabFavoritesFromDB = (data, name) => {
@@ -39,7 +42,7 @@ function App() {
   const loginButton = (e) => {
     const username = document.querySelector('#username');
     const password = document.querySelector('#password');
-
+    console.log('We are in the loginButtin function');
     if (username.value === '' || password.value === '') {
       const result = 'Please fill out the username and password fields to log in.';
       changeAttempt(result);
@@ -149,6 +152,8 @@ function App() {
     });
   };
 
+  const faTimesX = <span id="fullStar" onClick={() => setRendering('showFav')}><FontAwesomeIcon icon={faBookmark} /></span>;
+
   const signOut = () => {
     changeLoginStatus(false);
     changeAttempt(null);
@@ -158,13 +163,17 @@ function App() {
     setPosts([]);
     changeSignInWithGoogle(false);
   };
-
-  // If login status is false, return the login page
+  // if not logged in, render the login page
   if (loginStatus == false) {
     return (
       <BrowserRouter>
         <div>
-          <LoginPage loginButton={loginButton} signUp={signUp} loginAttempt={loginAttempt} />
+          <LoginPage
+            loginButton={loginButton}
+            signUp={signUp}
+            loginAttempt={loginAttempt}
+            googleLogin={googleLogin}
+          />
         </div>
       </BrowserRouter>
     );
@@ -172,8 +181,40 @@ function App() {
   // else if logged in, then return the map
   return (
     <div className="wrapper">
-      {!loginStatus
+      <Welcome
+        key={1}
+        currentUser={currentUser}
+        signOut={signOut}
+        signInWithGoogle={signInWithGoogle}
+      />
+      {/* <Welcome key={1} currentUser={currentUser} signOut={signOut} /> */}
+      {/* <button className="backToFavs" onClick={() => setRendering('showFav')}>X</button> */}
+      {faTimesX}
+
+      <Map
+        setCurrentCountryClick={setCurrentCountryClick}
+        getPosts={getPosts}
+        setRendering={setRendering}
+      />
+      {(loginStatus == true && rendering == 'showFav')
         ? (
+          <FavoriteList
+            currentFavorites={currentFavorites}
+            deleteFavorite={deleteFavorite}
+          />
+        )
+        : (
+          <NewsFeed
+            currentCountryClick={currentCountryClick}
+            posts={posts}
+            currentFavorites={currentFavorites}
+            setFavorites={setFavorites}
+            addFavorite={addFavorite}
+            deleteFavorite={deleteFavorite}
+          />
+        )}
+
+      {/* ? (
           <LogIn
             loginStatus={loginStatus}
             loginButton={loginButton}
@@ -184,17 +225,17 @@ function App() {
             googleLogin={googleLogin}
             signInWithGoogle={signInWithGoogle}
           />
-        )
-        : (
+        ) */}
+      {/* : (
           <Welcome
             key={1}
             currentUser={currentUser}
             signOut={signOut}
             signInWithGoogle={signInWithGoogle}
           />
-        )}
+        )} */}
 
-      <Map
+      {/* <Map
         setCurrentCountryClick={setCurrentCountryClick}
         getPosts={getPosts}
       />
@@ -208,7 +249,7 @@ function App() {
       <FavoriteList
         currentFavorites={currentFavorites}
         deleteFavorite={deleteFavorite}
-      />
+      /> */}
     </div>
   );
 }

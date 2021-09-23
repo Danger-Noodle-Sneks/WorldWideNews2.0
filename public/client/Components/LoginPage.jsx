@@ -6,7 +6,7 @@ import GoogleLogin from 'react-google-login';
 
 const LoginPage = (props) => {
   const {
-    loginStatus, loginAttempt, currentUser, googleLogin,
+    loginAttempt, googleLogin
   } = props;
   const { loginButton, signUp } = props;
   // const {signOut} = props;
@@ -16,7 +16,7 @@ const LoginPage = (props) => {
 
       <div className="loginTitles">
         <h1 className="header">World Wide News</h1>
-        {/* <h6 className="header">Same globe, now closer.</h6> */}
+        {/* <li className="header">Same globe, now closer.</li> */}
       </div>
 
       <div id="inputButtonWrapper">
