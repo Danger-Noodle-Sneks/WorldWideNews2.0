@@ -11,10 +11,9 @@ const FavoritedPost = (props) => {
   return (
     <section name="Post" id="individualPostWrapper">
       <div name="Post Title" id="title">
-        Title:
-        <a href={link}>{title}</a>
+        <a id="favoriteLinks" href={link}>{title}</a>
       </div>
-      {faTimesX}
+      <div id="removingFav">{faTimesX}</div>
     </section>
   );
 };
