@@ -1,5 +1,8 @@
 const express = require('express');
 const apiController = require('../controllers/apiController');
+const cookieController = require('../controllers/cookieController');
+const sessionController = require('../controllers/sessionController');
+
 
 const router = express.Router();
 
@@ -8,7 +11,9 @@ router.get('/population/:countryName', apiController.getPopulationData, (req, re
 router.get('/getArticles/:countryName', apiController.getArticles, (req, res) => res.status(200).json(res.locals.articles));
 
 // route to sign-up
-router.post('/signup', apiController.createUser,
+router.post('/signup',
+ apiController.createUser, cookieController.setSSIDCookie,
+ sessionController.startSession,
   (req, res) => {
     res.status(200).send(res.locals.user);
   });
@@ -16,6 +21,8 @@ router.post('/signup', apiController.createUser,
 // route and middlewares to execute when user tries to login
 router.post('/login',
   apiController.verifyUser,
+  cookieController.setSSIDCookie,
+  sessionController.startSession,
   apiController.getUserData,
   (req, res) => {
     res.status(200).json(res.locals.data);

@@ -1,8 +1,5 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable react/no-array-index-key */
-
-// HELLO
-
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -17,13 +14,13 @@ import LoginPage from './LoginPage.jsx';
 
 function App() {
   const [currentFavorites, setFavorites] = useState({});
-  const [loginStatus, changeLoginStatus] = useState(false);//CHANGED IT FOR NOW
+  const [loginStatus, changeLoginStatus] = useState(false);// CHANGED IT FOR NOW
   const [loginAttempt, changeAttempt] = useState(null);
   const [currentUser, changeUser] = useState(null);
-  const [currentCountryClick, setCurrentCountryClick] = useState(null);
   const [posts, setPosts] = useState([]);
   const [rendering, setRendering] = useState('showFav');
   const [signInWithGoogle, changeSignInWithGoogle] = useState(false);
+  const [checkedCookies, checkingCookies] = useState(false);
 
   const grabFavoritesFromDB = (data, name) => {
     if (!Array.isArray(data)) throw Error('wrong');
@@ -39,7 +36,25 @@ function App() {
     }
   };
 
-  const loginButton = (e) => {
+  const continueUserSession = async () => {
+    if (!checkedCookies) {
+      const res = await (await fetch('/sessionCheck')).json();
+      if (res.length > 0) {
+        const favArticles = {};
+        const [username, articles] = res;
+        articles.forEach((elem) => {
+          favArticles[elem.title] = elem.link;
+        });
+        changeLoginStatus(true);
+        changeUser(username);
+        setFavorites(favArticles);
+        checkingCookies(true);
+      }
+    }
+  };
+  if (!checkedCookies) continueUserSession();
+
+  const loginButton = () => {
     const username = document.querySelector('#username');
     const password = document.querySelector('#password');
     console.log('We are in the loginButtin function');
@@ -117,13 +132,10 @@ function App() {
       .catch((err) => console.log(err, 'error at google sign in'));
   };
 
-  const getPosts = (countryName) => {
-    setTimeout(async () => {
-      const postFetchData = await fetch(`/api/getArticles/${countryName}`);
-      const postsArr = await postFetchData.json();
-      setPosts(postsArr);
-    },
-    1000);
+  const getPosts = async (countryName) => {
+    const postFetchData = await fetch(`/api/getArticles/${countryName}`);
+    const postsArr = await postFetchData.json();
+    setPosts(postsArr);
   };
 
   const addFavorite = (title, link) => {
@@ -154,17 +166,17 @@ function App() {
 
   const faTimesX = <span id="fullStar" onClick={() => setRendering('showFav')}><FontAwesomeIcon icon={faBookmark} /></span>;
 
-  const signOut = () => {
+  const signOut = async () => {
+    fetch('/signout');
     changeLoginStatus(false);
     changeAttempt(null);
     setFavorites({});
     changeUser(null);
-    setCurrentCountryClick(null);
     setPosts([]);
     changeSignInWithGoogle(false);
   };
   // if not logged in, render the login page
-  if (loginStatus == false) {
+  if (loginStatus === false) {
     return (
       <BrowserRouter>
         <div>
@@ -187,16 +199,13 @@ function App() {
         signOut={signOut}
         signInWithGoogle={signInWithGoogle}
       />
-      {/* <Welcome key={1} currentUser={currentUser} signOut={signOut} /> */}
-      {/* <button className="backToFavs" onClick={() => setRendering('showFav')}>X</button> */}
       <p id="favIcon">{faTimesX}</p>
 
       <Map
-        setCurrentCountryClick={setCurrentCountryClick}
         getPosts={getPosts}
         setRendering={setRendering}
       />
-      {(loginStatus == true && rendering == 'showFav')
+      {(loginStatus === true && rendering === 'showFav')
         ? (
           <FavoriteList
             currentFavorites={currentFavorites}
@@ -205,7 +214,6 @@ function App() {
         )
         : (
           <NewsFeed
-            currentCountryClick={currentCountryClick}
             posts={posts}
             currentFavorites={currentFavorites}
             setFavorites={setFavorites}
@@ -213,43 +221,6 @@ function App() {
             deleteFavorite={deleteFavorite}
           />
         )}
-
-      {/* ? (
-          <LogIn
-            loginStatus={loginStatus}
-            loginButton={loginButton}
-            signUp={signUp}
-            loginAttempt={loginAttempt}
-            key={1}
-            changeLoginStatus={changeLoginStatus}
-            googleLogin={googleLogin}
-            signInWithGoogle={signInWithGoogle}
-          />
-        ) */}
-      {/* : (
-          <Welcome
-            key={1}
-            currentUser={currentUser}
-            signOut={signOut}
-            signInWithGoogle={signInWithGoogle}
-          />
-        )} */}
-
-      {/* <Map
-        setCurrentCountryClick={setCurrentCountryClick}
-        getPosts={getPosts}
-      />
-      <NewsFeed
-        posts={posts}
-        currentFavorites={currentFavorites}
-        addFavorite={addFavorite}
-        deleteFavorite={deleteFavorite}
-      />
-
-      <FavoriteList
-        currentFavorites={currentFavorites}
-        deleteFavorite={deleteFavorite}
-      /> */}
     </div>
   );
 }

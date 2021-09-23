@@ -21,12 +21,14 @@ module.exports = {
     },
     compress: true,
     port: 8080,
+    hot: true,
     proxy: {
       '*': {
-        target: 'http://localhost:3000',
+        target: 'http://localhost:3000/',
         changeOrigin: true,
       },
     },
+    historyApiFallback: true,
   },
 
   plugins: [

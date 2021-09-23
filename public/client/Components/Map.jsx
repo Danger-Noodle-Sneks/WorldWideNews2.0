@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 mapboxGl.accessToken = 'pk.eyJ1IjoibGlhbWZvbnRlcyIsImEiOiJja3RsbzdjdmQxeGZxMnBwODJ1aWlpMjgwIn0.tQGIes1AYOO8KIoAJYHTzQ';
 
 function Map(props) {
-  const { setCurrentCountryClick, getPosts,setRendering } = props;
+  const { getPosts, setRendering } = props;
 
   let popup;
   let populationData;
@@ -178,7 +178,6 @@ function Map(props) {
           clickCountryId = e.features[0].id;
           const countryName = e.features[0].properties.name_en;
           if (clickCountryId !== previousCountryClicked) {
-            setCurrentCountryClick(countryName);
             getPosts(countryName);
             setRendering('showNews');
             previousCountryClicked = clickCountryId;
@@ -250,8 +249,6 @@ function Map(props) {
 }
 
 Map.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
-  setCurrentCountryClick: PropTypes.any.isRequired,
   getPosts: PropTypes.func.isRequired,
 };
 export default Map;

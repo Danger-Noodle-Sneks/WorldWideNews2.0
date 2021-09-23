@@ -1,22 +1,18 @@
 import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import GoogleLogin from 'react-google-login';
-// import { BrowserRouter, Route, Link } from "react-router-dom";
-// import { render } from 'sass';
+
 
 const LoginPage = (props) => {
   const {
-    loginAttempt, googleLogin
+    loginAttempt, googleLogin, loginButton, signUp
   } = props;
-  const { loginButton, signUp } = props;
-  // const {signOut} = props;
 
   return (
     <div className="loginWrapper">
 
       <div className="loginTitles">
         <h1 className="header">World Wide News</h1>
-        {/* <li className="header">Same globe, now closer.</li> */}
       </div>
 
       <div id="inputButtonWrapper">
