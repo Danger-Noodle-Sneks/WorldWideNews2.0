@@ -3,16 +3,26 @@
 import React from 'react';
 import Button from './Button.jsx';
 
-
 function Welcome(props) {
-  const { currentUser,signOut } = props;
+  const { currentUser, signOut, signInWithGoogle } = props;
   return (
-    <div id = 'welcomeDiv'>
+    <div id="welcomeDiv">
       Welcome
       <div>
         {currentUser}
       </div>
-      <Button key={1} signOut={signOut} />
+
+      {currentUser}
+      {signInWithGoogle
+        ? (
+          <GoogleLogout
+            clientID="476477218164-tvc3q7g5c9tgem4cqtdq39d4894b2qlu.apps.googleusercontent.com"
+            buttonText="Sign Out"
+            onSuccess={signOut}
+            autoLoad={false}
+          />
+        )
+        : (<Button key={1} signOut={signOut} />)}
 
     </div>
   );

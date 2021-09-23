@@ -157,6 +157,36 @@ apiController.getUserData = async (req, res, next) => {
   }
 };
 
+apiController.googleSignIn = async (req, res, next) => {
+  try {
+    const { username, password } = req.body;
+    console.log('username before finding', username);
+    const user = await models.Users.findOne({ username });
+    console.log('after mongodb', user);
+
+    if (!user) {
+      const newUser = {
+        username,
+        password,
+      };
+      await models.Users.create(newUser);
+      console.log(`User: ${username} signed up`);
+      res.locals.user = username;
+      return next();
+    }
+
+    res.locals.user = username;
+    console.log(res.locals.user);
+    return next();
+  } catch (err) {
+    next({
+      log: 'Express error handler caught in apiController.loginWithGoogle middleware',
+      status: 500,
+      message: { err },
+    });
+  }
+};
+
 // function to add an article link as a favourite
 
 apiController.addFav = async (req, res, next) => {
@@ -170,6 +200,8 @@ apiController.addFav = async (req, res, next) => {
     const update = {
       favorites: { title, link },
     };
+
+    if (!currentUser) return res.status(500).send('Please log in to save favorites');
 
     await models.Users.findOneAndUpdate(query, { $push: update });
 
@@ -198,6 +230,7 @@ apiController.deleteFav = async (req, res, next) => {
       favorites: { title, link },
     };
 
+    if (!currentUser) return res.status(500).send('Please log in to delete favorites');
     await models.Users.findOneAndUpdate(query, { $pull: update });
 
     console.log(`${currentUser} deleted title: ${title}, link: ${link}`);

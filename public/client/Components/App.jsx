@@ -10,7 +10,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import fetch from 'isomorphic-fetch';
 import { faBookmark } from '@fortawesome/free-solid-svg-icons';
 import Map from './Map.jsx';
-import LogIn from './LogIn.jsx';
 import Welcome from './Welcome.jsx';
 import FavoriteList from './FavoriteList.jsx';
 import NewsFeed from './NewsFeed.jsx';
@@ -24,6 +23,21 @@ function App() {
   const [currentCountryClick, setCurrentCountryClick] = useState(null);
   const [posts, setPosts] = useState([]);
   const [rendering, setRendering] = useState('showFav');
+  const [signInWithGoogle, changeSignInWithGoogle] = useState(false);
+
+  const grabFavoritesFromDB = (data, name) => {
+    if (!Array.isArray(data)) throw Error('wrong');
+    if (Array.isArray(data)) {
+      setFavorites({});
+      const favoritesObj = {};
+      data.forEach((elem) => {
+        favoritesObj[elem.title] = elem.link;
+      });
+      setFavorites(favoritesObj);
+      changeUser(name);
+      changeLoginStatus(true);
+    }
+  };
 
   const loginButton = (e) => {
     const username = document.querySelector('#username');
@@ -45,23 +59,13 @@ function App() {
       })
         .then((res) => res.json())
         .then((data) => {
-          if (!Array.isArray(data)) throw Error('wrong');
-          if (Array.isArray(data)) {
-            setFavorites({});
-            const favoritesObj = {};
-            data.forEach((elem) => {
-              favoritesObj[elem.title] = elem.link;
-            });
-            setFavorites(favoritesObj);
-            changeUser(username.value);
-            changeLoginStatus(true);
-          }
+          grabFavoritesFromDB(data, username.value);
         })
         .catch((err) => changeAttempt('Incorrect username or password!'));
     }
   };
 
-  const signUp = (e) => {
+  const signUp = () => {
     const username = document.querySelector('#username');
     const password = document.querySelector('#password');
 
@@ -90,6 +94,27 @@ function App() {
 
         .catch((err) => console.log(err));
     }
+  };
+
+  const googleLogin = (response) => {
+    const { name, googleId } = response.profileObj;
+    const user = {
+      username: name,
+      password: googleId,
+    };
+    changeSignInWithGoogle(true);
+    fetch('/api/loginWithGoogle', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(user),
+
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        grabFavoritesFromDB(data, name);
+      })
+
+      .catch((err) => console.log(err, 'error at google sign in'));
   };
 
   const getPosts = (countryName) => {
@@ -136,13 +161,14 @@ function App() {
     changeUser(null);
     setCurrentCountryClick(null);
     setPosts([]);
+    changeSignInWithGoogle(false);
   };
   // if not logged in, render the login page
   if (loginStatus == false) {
     return (
       <BrowserRouter>
         <div>
-          <LoginPage loginButton={loginButton} signUp={signUp} loginAttempt={loginAttempt} />
+          <LoginPage loginButton={loginButton} signUp={signUp} loginAttempt={loginAttempt} googleLogin={googleLogin} />
         </div>
       </BrowserRouter>
     );
@@ -150,8 +176,7 @@ function App() {
   // else if logged in, then return the map
   return (
     <div className="wrapper">
-      {!loginStatus
-        ? <LogIn loginButton={loginButton} signUp={signUp} loginAttempt={loginAttempt} /> : <Welcome key={1} currentUser={currentUser} signOut={signOut} />}
+      <Welcome key={1} currentUser={currentUser} signOut={signOut} signInWithGoogle={signInWithGoogle} />
       {/* <Welcome key={1} currentUser={currentUser} signOut={signOut} /> */}
       {/* <button className="backToFavs" onClick={() => setRendering('showFav')}>X</button> */}
       {faTimesX}
@@ -161,6 +186,42 @@ function App() {
         ? <FavoriteList currentFavorites={currentFavorites} deleteFavorite={deleteFavorite} />
         : <NewsFeed currentCountryClick={currentCountryClick} posts={posts} currentFavorites={currentFavorites} setFavorites={setFavorites} addFavorite={addFavorite} deleteFavorite={deleteFavorite} />}
 
+      {/* ? (
+          <LogIn
+            loginStatus={loginStatus}
+            loginButton={loginButton}
+            signUp={signUp}
+            loginAttempt={loginAttempt}
+            key={1}
+            changeLoginStatus={changeLoginStatus}
+            googleLogin={googleLogin}
+            signInWithGoogle={signInWithGoogle}
+          />
+        ) */}
+      {/* : (
+          <Welcome
+            key={1}
+            currentUser={currentUser}
+            signOut={signOut}
+            signInWithGoogle={signInWithGoogle}
+          />
+        )} */}
+
+      {/* <Map
+        setCurrentCountryClick={setCurrentCountryClick}
+        getPosts={getPosts}
+      />
+      <NewsFeed
+        posts={posts}
+        currentFavorites={currentFavorites}
+        addFavorite={addFavorite}
+        deleteFavorite={deleteFavorite}
+      />
+
+      <FavoriteList
+        currentFavorites={currentFavorites}
+        deleteFavorite={deleteFavorite}
+      /> */}
     </div>
   );
 }
