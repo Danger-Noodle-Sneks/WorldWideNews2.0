@@ -24,6 +24,7 @@ const Newsfeed = (props) => {
   return (
 
     <section name="Articles" id="articleDiv">
+      
       {posts.length === 0 ? 'Click on a country to see its news!'
         : createPosts(posts)}
     </section>

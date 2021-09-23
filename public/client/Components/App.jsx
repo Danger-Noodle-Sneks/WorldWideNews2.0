@@ -17,7 +17,7 @@ import LoginPage from './LoginPage.jsx';
 
 function App() {
   const [currentFavorites, setFavorites] = useState({});
-  const [loginStatus, changeLoginStatus] = useState(false);
+  const [loginStatus, changeLoginStatus] = useState(false);//CHANGED IT FOR NOW
   const [loginAttempt, changeAttempt] = useState(null);
   const [currentUser, changeUser] = useState(null);
   const [currentCountryClick, setCurrentCountryClick] = useState(null);
@@ -189,7 +189,7 @@ function App() {
       />
       {/* <Welcome key={1} currentUser={currentUser} signOut={signOut} /> */}
       {/* <button className="backToFavs" onClick={() => setRendering('showFav')}>X</button> */}
-      {faTimesX}
+      <p id="favIcon">{faTimesX}</p>
 
       <Map
         setCurrentCountryClick={setCurrentCountryClick}

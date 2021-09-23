@@ -2,18 +2,16 @@
 /* eslint-disable react/no-array-index-key */
 import React from 'react';
 import GoogleLogout from 'react-google-login';
-import Button from './Button.jsx';
+// import Button from './Button.jsx';
 
 function Welcome(props) {
   const { currentUser, signOut, signInWithGoogle } = props;
   return (
     <div id="welcomeDiv">
-      Welcome
-      <div>
-        {currentUser}
+      <div id="welcomeText">
+        <p>Welcome</p>
+        <p>{currentUser}</p>
       </div>
-
-      {currentUser}
       {signInWithGoogle
         ? (
           <GoogleLogout
@@ -22,7 +20,7 @@ function Welcome(props) {
             onSuccess={signOut}
           />
         )
-        : (<Button key={1} onClick={signOut}/>)}
+        : (<button key={1} id="logOutBtn" onClick={signOut}>Sign out </button>)}
 
     </div>
   );
