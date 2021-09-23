@@ -5,6 +5,7 @@ const sessionController = {};
 sessionController.isLoggedIn = async (req, res, next) => {
   try {
     const { ssid } = req.cookies;
+
     if (ssid) {
       const cookieCheck = await models.Session.findOne({ cookieId: ssid });
       if (cookieCheck) {

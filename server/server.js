@@ -1,18 +1,24 @@
-const express = require('express');
-const cookieParser = require('cookie-parser');
-
-const app = express();
 const path = require('path');
-
-app.use(cookieParser());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 const sessionController = require('./controllers/sessionController');
 const cookieController = require('./controllers/cookieController');
 const apiController = require('./controllers/apiController');
 
-// eslint-disable-next-line import/no-dynamic-require
+const express = require('express');
+
+const app = express();
+const cookieParser = require('cookie-parser');
+const userController = require('./controllers/userController');
+
 const apiRouter = require(path.join(__dirname, 'routes/api.js'));
+
+const userRouter = require(path.join(__dirname, 'routes/user.js'));
+
+app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+
+
 
 if (process.env.NODE_ENV === 'production') {
   app.use('/build', express.static(path.join(__dirname, '../build')));
@@ -22,9 +28,7 @@ if (process.env.NODE_ENV === 'production') {
 
 app.get('/sessionCheck',
   sessionController.isLoggedIn,
-  cookieController.setSSIDCookie,
-  sessionController.startSession,
-  apiController.getUserData,
+  userController.getUserData,
   (req, res) => {
     res.status(200).json([res.locals.user, res.locals.data]);
   });
@@ -35,6 +39,25 @@ app.get('/signout',
   (req, res) => {
     res.sendStatus(200);
   });
+
+app.post('/signup',
+  userController.createUser,
+  cookieController.setSSIDCookie,
+  sessionController.startSession,
+  (req, res) => {
+    res.status(200).send(res.locals.user);
+  });
+
+app.post('/login',
+  userController.verifyUser,
+  cookieController.setSSIDCookie,
+  sessionController.startSession,
+  userController.getUserData,
+  (req, res) => {
+    res.status(200).json(res.locals.data);
+  });
+
+app.use('/user', userRouter);
 app.use('/api', apiRouter);
 
 app.use('/*', (req, res) => {
