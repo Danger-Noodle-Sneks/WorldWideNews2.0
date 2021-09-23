@@ -27,8 +27,13 @@ const LoginPage = (props) => {
       <div id="buttonsDiv">
         <button type="button" id="loginBtn" onClick={loginButton} value="Log-In">Log In</button>
         <button id="forgotPassword"> Forgot password?</button>
+        <div id="loginAttemptMessage">
+        {loginAttempt}
+        </div>
+      
       </div>
 
+    
       <div id="buttonsDivSignUp">
         <p id="or">OR</p>
 
@@ -44,9 +49,7 @@ const LoginPage = (props) => {
           <button type="button" onClick={signUp} id="signupBtn" value="Sign-Up">Sign up</button>
         </div>
       </div>
-      <div id="loginAttemptMessage">
-        {loginAttempt}
-      </div>
+     
 
     </div>
   );

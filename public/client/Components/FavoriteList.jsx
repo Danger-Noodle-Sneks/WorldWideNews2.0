@@ -15,7 +15,7 @@ function FavoriteList(props) {
   return (
     <div>
       <div className="favoritesList">
-        <p id="favoriteTitle">Click on an article to favorite it!</p>
+        <p id="favoriteTitle">Your favorite articles:</p>
         {favoritedPosts}
       </div>
     </div>

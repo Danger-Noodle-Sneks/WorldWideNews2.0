@@ -8,14 +8,9 @@ function Welcome(props) {
   const { currentUser, signOut, signInWithGoogle } = props;
   return (
     <div id="welcomeDiv">
-<<<<<<< HEAD
-     
-      <div>
-=======
       <div id="welcomeText">
->>>>>>> 14a0234e9c03265f542e9c0c5faaf1e49085afdc
-        <p>Welcome</p>
-        <p>{currentUser}</p>
+        <p id="welcomeWord">Signed in as</p>
+        {currentUser}
       </div>
       {signInWithGoogle
         ? (
