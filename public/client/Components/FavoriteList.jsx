@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import FavoritedPost from './FavoritedPost.jsx';
 
 function FavoriteList(props) {
-  const { currentFavorites, deleteFavorite } = props;
+  const { currentFavorites, deleteFavorite,faTimesX } = props;
 
   const favoritedPosts = [];
   let counter = 0;

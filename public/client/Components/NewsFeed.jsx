@@ -1,9 +1,11 @@
 import React from 'react';
 import Post from './Post.jsx';
+import { faWindowClose } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const Newsfeed = (props) => {
   const {
-    posts, currentFavorites, addFavorite, deleteFavorite,
+    posts, currentFavorites, addFavorite, deleteFavorite, faTimesX, setRendering
   } = props;
 
   const createPosts = (postData) => {
@@ -22,13 +24,14 @@ const Newsfeed = (props) => {
   };
 
   return (
-
-    <section name="Articles" id="articleDiv">
-      
-      {posts.length === 0 ? 'Click on a country to see its news!'
-        : createPosts(posts)}
+    <section name="ArticlesAndClose" id="ArticlesAndClose"> 
+      <section name="Articles" id="newsArticlesList">
+      <p id="closeIcon"> <FontAwesomeIcon onClick={faTimesX} icon={faWindowClose} /></p>
+        
+        {posts.length === 0 ? 'Click on a country to see its news!'
+          : createPosts(posts)}
+      </section>
     </section>
-
   );
 };
 
