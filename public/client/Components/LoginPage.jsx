@@ -20,8 +20,8 @@ const LoginPage = (props) => {
       </div>
 
       <div id="inputButtonWrapper">
-        <input name="username" placeholder="username" id="usernameAndPassword" autoComplete="off" />
-        <input name="password" placeholder="password" id="usernameAndPassword" autoComplete="off" type="password" />
+        <input name="username" placeholder="username" id="username" autoComplete="off" />
+        <input name="password" placeholder="password" id="password" autoComplete="off" type="password" />
       </div>
 
       <div id="buttonsDiv">

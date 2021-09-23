@@ -42,7 +42,7 @@ function App() {
   const loginButton = (e) => {
     const username = document.querySelector('#username');
     const password = document.querySelector('#password');
-
+    console.log('We are in the loginButtin function');
     if (username.value === '' || password.value === '') {
       const result = 'Please fill out the username and password fields to log in.';
       changeAttempt(result);
@@ -168,7 +168,12 @@ function App() {
     return (
       <BrowserRouter>
         <div>
-          <LoginPage loginButton={loginButton} signUp={signUp} loginAttempt={loginAttempt} googleLogin={googleLogin} />
+          <LoginPage
+            loginButton={loginButton}
+            signUp={signUp}
+            loginAttempt={loginAttempt}
+            googleLogin={googleLogin}
+          />
         </div>
       </BrowserRouter>
     );
@@ -176,15 +181,38 @@ function App() {
   // else if logged in, then return the map
   return (
     <div className="wrapper">
-      <Welcome key={1} currentUser={currentUser} signOut={signOut} signInWithGoogle={signInWithGoogle} />
+      <Welcome
+        key={1}
+        currentUser={currentUser}
+        signOut={signOut}
+        signInWithGoogle={signInWithGoogle}
+      />
       {/* <Welcome key={1} currentUser={currentUser} signOut={signOut} /> */}
       {/* <button className="backToFavs" onClick={() => setRendering('showFav')}>X</button> */}
       {faTimesX}
 
-      <Map setCurrentCountryClick={setCurrentCountryClick} getPosts={getPosts} setRendering={setRendering} />
+      <Map
+        setCurrentCountryClick={setCurrentCountryClick}
+        getPosts={getPosts}
+        setRendering={setRendering}
+      />
       {(loginStatus == true && rendering == 'showFav')
-        ? <FavoriteList currentFavorites={currentFavorites} deleteFavorite={deleteFavorite} />
-        : <NewsFeed currentCountryClick={currentCountryClick} posts={posts} currentFavorites={currentFavorites} setFavorites={setFavorites} addFavorite={addFavorite} deleteFavorite={deleteFavorite} />}
+        ? (
+          <FavoriteList
+            currentFavorites={currentFavorites}
+            deleteFavorite={deleteFavorite}
+          />
+        )
+        : (
+          <NewsFeed
+            currentCountryClick={currentCountryClick}
+            posts={posts}
+            currentFavorites={currentFavorites}
+            setFavorites={setFavorites}
+            addFavorite={addFavorite}
+            deleteFavorite={deleteFavorite}
+          />
+        )}
 
       {/* ? (
           <LogIn
