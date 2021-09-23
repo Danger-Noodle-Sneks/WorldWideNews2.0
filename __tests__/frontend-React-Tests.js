@@ -5,7 +5,6 @@ import toJson from 'enzyme-to-json';
 
 // Enzyme is a wrapper around React test utilities which makes it easier to
 // shallow render and traverse the shallow rendered tree.
-import Button from '../public/client/components/Button';
 import Post from '../public/client/Components/Post';
 import Newsfeed from '../public/client/Components/NewsFeed';
 import FavoritedPost from '../public/client/Components/FavoritedPost';
@@ -14,26 +13,6 @@ import FavoritedPost from '../public/client/Components/FavoritedPost';
 configure({ adapter: new Adapter() });
 
 describe('React unit tests', () => {
-  describe('Button', () => {
-    let wrapper;
-    const props = {
-      onClick: jest.fn(),
-    };
-
-    beforeAll(() => {
-      wrapper = shallow(<Button {...props} />);
-    });
-
-    it('Renders a <button> element', () => {
-      expect(wrapper.type()).toEqual('button');
-    });
-
-    it('Calls the function passed in as a prop on click.', () => {
-      wrapper.find('button').simulate('click');
-      expect(props.onClick).toHaveBeenCalled();
-    });
-  });
-
   describe('Post', () => {
     let wrapper;
     const props = {

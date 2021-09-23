@@ -15,17 +15,21 @@ const Post = (props) => {
 
   const heartEmpty = <span id="emptyStar" onClick={() => addFavorite(title, link)}><FontAwesomeIcon icon={faHeartEmpty} /></span>;
   const heartFull = <span id="fullStar" onClick={() => deleteFavorite(title)}><FontAwesomeIcon icon={faHeartFilled} /></span>;
-  
+
   return (
     <section name="Post" id="newsPostWrapper">
       <div name="Post Title" id="articleTitle">
-        <a id="newsLink" href={link}>{title}</a>
-        <div id="favStar"> {favorited ? heartFull : heartEmpty} </div>
-      </div>
-        <div name="Article Summary" id="articleSummary">
-          {summary}
+        <a id="newsLink" href={link} target="_blank" rel="noreferrer">{title}</a>
+        <div id="favStar">
+          {' '}
+          {favorited ? heartFull : heartEmpty}
+          {' '}
         </div>
-      
+      </div>
+      <div name="Article Summary" id="articleSummary">
+        {summary}
+      </div>
+
     </section>
   );
 };
