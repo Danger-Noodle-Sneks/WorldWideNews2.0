@@ -36,28 +36,29 @@ function App() {
     }
   };
 
-  const continueUserSession = async () => {
+  useEffect(() => {
     if (!checkedCookies) {
-      const res = await (await fetch('/sessionCheck')).json();
-      if (res.length > 0) {
-        const favArticles = {};
-        const [username, articles] = res;
-        articles.forEach((elem) => {
-          favArticles[elem.title] = elem.link;
-        });
-        changeLoginStatus(true);
-        changeUser(username);
-        setFavorites(favArticles);
-        checkingCookies(true);
+      checkingCookies(true);
+      (async () => {
+        const res = await (await fetch('/sessionCheck')).json();
+        if (res.length > 0) {
+          const favArticles = {};
+          const [username, articles] = res;
+          articles.forEach((elem) => {
+            favArticles[elem.title] = elem.link;
+          });
+          changeLoginStatus(true);
+          changeUser(username);
+          setFavorites(favArticles);
+        }
       }
+      )();
     }
-  };
-  if (!checkedCookies) continueUserSession();
+  });
 
   const loginButton = () => {
     const username = document.querySelector('#username');
     const password = document.querySelector('#password');
-    console.log('We are in the loginButtin function');
     if (username.value === '' || password.value === '') {
       const result = 'Please fill out the username and password fields to log in.';
       changeAttempt(result);
@@ -66,7 +67,7 @@ function App() {
         username: username.value,
         password: password.value,
       };
-      fetch('/api/login', {
+      fetch('/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(user),
@@ -95,7 +96,7 @@ function App() {
         username: username.value,
         password: password.value,
       };
-      fetch('/api/signup', {
+      fetch('/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(user),

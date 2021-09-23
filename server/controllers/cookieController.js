@@ -6,8 +6,9 @@ cookieController.deleteCookies = (req, res, next) => {
 };
 
 cookieController.setSSIDCookie = (req, res, next) => {
+  const numOfSeconds = 600;
   const cookieOptions = {
-    maxAge: 120000, // ms
+    maxAge: 1000 * numOfSeconds, // ms
     httpOnly: true,
   };
 

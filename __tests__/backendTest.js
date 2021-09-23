@@ -57,7 +57,6 @@ describe('Route integration', () => {
         const user = {
           title: 'Title',
           currentUser: 'testing',
-          title: 'Title',
           link: 'Link',
         };
         test('Receives 200 status from server indicating the post has been added.', () => request(server)

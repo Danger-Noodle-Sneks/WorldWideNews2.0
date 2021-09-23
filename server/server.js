@@ -22,8 +22,6 @@ if (process.env.NODE_ENV === 'production') {
 
 app.get('/sessionCheck',
   sessionController.isLoggedIn,
-  cookieController.setSSIDCookie,
-  sessionController.startSession,
   apiController.getUserData,
   (req, res) => {
     res.status(200).json([res.locals.user, res.locals.data]);
@@ -34,6 +32,25 @@ app.get('/signout',
   cookieController.deleteCookies,
   (req, res) => {
     res.sendStatus(200);
+  });
+
+// route to sign-up
+app.post('/signup',
+  apiController.createUser,
+  cookieController.setSSIDCookie,
+  sessionController.startSession,
+  (req, res) => {
+    res.status(200).send(res.locals.user);
+  });
+
+// route and middlewares to execute when user tries to login
+app.post('/login',
+  apiController.verifyUser,
+  cookieController.setSSIDCookie,
+  sessionController.startSession,
+  apiController.getUserData,
+  (req, res) => {
+    res.status(200).json(res.locals.data);
   });
 app.use('/api', apiRouter);
 

@@ -16,7 +16,6 @@ apiController.getPopulationData = (req, res, next) => {
     ['Saint Vincent and the Grenadines']:'St. Vincent & Grenadines',
     ['Ivory Coast']:'Côte d\'Ivoire',
   };
-  // console.log(countryName.toString())
   if (alternateCountryNames[countryName]) countryName = alternateCountryNames[countryName];
   const populationRequest = {
     method: 'GET',
@@ -160,10 +159,11 @@ apiController.getUserData = async (req, res, next) => {
   try {
     const user = await models.Users.findOne({ username: res.locals.user });
 
-    // changed elem => elem.name to elem=>elem.link
+    console.log('test')
+    // console.log(user.favorites)
     const favoriteArticles = user.favorites.map((elem) => elem);
 
-    res.locals.data = favoriteArticles;
+    res.locals.data = user.favorites;
     next();
   } catch (err) {
     next({
@@ -177,9 +177,7 @@ apiController.getUserData = async (req, res, next) => {
 apiController.googleSignIn = async (req, res, next) => {
   try {
     const { username, password } = req.body;
-    console.log('username before finding', username);
     const user = await models.Users.findOne({ username });
-    console.log('after mongodb', user);
 
     if (!user) {
       const newUser = {
@@ -193,7 +191,6 @@ apiController.googleSignIn = async (req, res, next) => {
     }
 
     res.locals.user = username;
-    console.log(res.locals.user);
     return next();
   } catch (err) {
     next({
