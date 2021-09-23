@@ -4,7 +4,6 @@
 
 html {
   font-size: 6vw;
-  
 }
 
 @media screen and (min-width: 450px) {
@@ -45,95 +44,97 @@ p {
   display: flex;
   height: 20%;
 
-  #ArticlesAndClose{
+  #ArticlesAndClose {
+    #newsArticlesList {
+      // scrolling
+      // text-overflow: clip;
+      overflow-x: hidden;
+      // overflow-y: auto;
+      // display: flex;
+      width: 15rem;
+      word-wrap: break-word;
+      // flex-direction: column;
 
-  #newsArticlesList {
-    // scrolling
-    // text-overflow: clip;
-    overflow-x: hidden;
-    // overflow-y: auto;
-    // display: flex;
-    width: 15rem;
-    word-wrap: break-word;
-    // flex-direction: column;
-   
-    //same height as the map
-    height: 650px;
+      //same height as the map
+      height: 650px;
 
-    //same styles as the favourite list
-    text-align: left;
-    z-index: 10;
-    position: absolute;
-    left: 5%;
-    top:2%;
-    display: flex;
-    flex-direction: column;
-    gap:10px;
-    font-size:20px;
-    font-family: $buttonsFont;
-    color: $loginBlue;
-    background-color: transparent;
-
-    #closeIcon{
-      text-align: right;
-      margin: 0;
-    }
-    #newsPostWrapper {
-      font-size: min(0.5rem) !important;
+      //same styles as the favourite list
+      text-align: left;
+      z-index: 10;
+      position: absolute;
+      left: 5%;
+      top: 2%;
       display: flex;
       flex-direction: column;
-      border: lavender solid;
-      border-radius: 5% 5% 5% 5%;
-      background-color: rgba(252, 252, 248, 0.845);
-      border-radius: 22px;
-      height: 50%;
-    
-      #articleTitle{
-        font-size: 15px;
-        font-family: $newsTitle;
-        color: $loginBlue;
+      gap: 10px;
+      font-size: 20px;
+      font-family: $buttonsFont;
+      color: $loginBlue;
+      background-color: transparent;
+
+      #closeIcon {
+        text-align: right;
+        margin: 0;
+      }
+      #closeIcon:hover {
+        cursor: pointer;
+      }
+      #newsPostWrapper {
+        font-size: min(0.5rem) !important;
         display: flex;
-        gap:10px;
-        justify-content: space-between;
-        padding: 15px;
-      
-        #newsLink{
-        text-decoration:none;
-        color: $loginBlue;
+        flex-direction: column;
+        border: lavender solid;
+        border-radius: 5% 5% 5% 5%;
+        background-color: rgba(252, 252, 248, 0.845);
+        border-radius: 22px;
+        height: 50%;
+
+        #articleTitle {
+          font-size: 15px;
+          font-family: $newsTitle;
+          color: $loginBlue;
+          display: flex;
+          gap: 10px;
+          justify-content: space-between;
+          padding: 15px;
+
+          #favStar:hover {
+            cursor: pointer;
+          }
+
+          #newsLink {
+            text-decoration: none;
+            color: $loginBlue;
+          }
+        }
+
+        #articleSummary {
+          font-family: $fontSubTitle;
+          padding: 15px;
         }
       }
-
-      #articleSummary{
-        font-family: $fontSubTitle;
-        padding: 15px;
-
-      }
-
     }
-  
   }
-}
   .favoritesList {
     text-align: left;
-    z-index:5;
+    z-index: 5;
     position: absolute;
     left: 5%;
-    top:5%;
+    top: 5%;
     display: flex;
     flex-direction: column;
-    gap:10px;
-    font-size:20px;
+    gap: 10px;
+    font-size: 20px;
     font-family: $buttonsFont;
     color: $loginBlue;
 
-    #favoriteTitle{
-    background-color:rgba(252, 252, 248, 0.845);
-    padding: 10px;
-    
+    #favoriteTitle {
+      background-color: rgba(252, 252, 248, 0.845);
+      padding: 10px;
     }
 
-    #favoriteLinks{
-      text-decoration:none;
+    #favoriteLinks {
+      text-decoration: none;
       color: $loginBlue;
     }
 
@@ -143,65 +144,72 @@ p {
       color: $loginBlue;
       background-color: rgba(252, 252, 248, 0.845);
       display: flex;
-      gap:10px;
+      gap: 10px;
       justify-content: space-between;
-      padding:15px;
+      padding: 15px;
     }
 
     #removingFav {
       text-align: right;
     }
+    #removingFav:hover {
+      cursor: pointer;
+    }
   }
 
   #welcomeDiv {
     display: flex;
-    z-index:5;
+    z-index: 5;
     position: absolute;
     right: 2%;
     top: 2%;
     align-items: center;
     color: $loginBlue;
-    gap:10px;
+    gap: 10px;
   }
   #welcomeWord {
-    font-family:$fontSubTitle;
-    
+    font-family: $fontSubTitle;
   }
-  #welcomeText{
-    display:flex;
+  #welcomeText {
+    display: flex;
     font-size: 12px;
     font-family: $newsTitle;
-    align-items:center;
-    gap:5px;
-    justify-content:center;
-    color:#092737;
+    align-items: center;
+    gap: 5px;
+    justify-content: center;
+    color: #092737;
   }
 
-  #logOutBtn{
+  #logOutBtn {
     border-radius: 4px;
-    background-color:transparent;
+    background-color: transparent;
     border: 1px solid #1d465c;
     width: 70px;
     height: 30px;
     font-size: 15px;
     font-family: $buttonsFont;
-    color:#1d465c;
+    color: #1d465c;
   }
-  
+  #logOutBtn:hover {
+    cursor: pointer;
+  }
 
   #favIcon {
     flex-direction: column;
-    z-index:5;
+    z-index: 5;
     position: absolute;
     left: 3%;
-    top:3%;
+    top: 3%;
+  }
+  #favIcon:hover {
+    cursor: pointer;
   }
 
   #mapContainer {
     width: 100%;
     height: 500%;
     font-size: 0.25rem;
-    padding:-10px;
+    padding: -10px;
 
     .popup {
       // display: flex;

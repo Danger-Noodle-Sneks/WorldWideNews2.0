@@ -26,7 +26,7 @@ const Newsfeed = (props) => {
   return (
     <section name="ArticlesAndClose" id="ArticlesAndClose"> 
       <section name="Articles" id="newsArticlesList">
-      <p id="closeIcon"> <FontAwesomeIcon onClick={faTimesX} icon={faWindowClose} /></p>
+      <span id="closeIcon"> <FontAwesomeIcon onClick={faTimesX} icon={faWindowClose} /></span>
         
         {posts.length === 0 ? 'Click on a country to see its news!'
           : createPosts(posts)}
