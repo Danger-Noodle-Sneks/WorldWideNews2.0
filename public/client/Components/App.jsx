@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import fetch from 'isomorphic-fetch';
-import { faBookmark } from '@fortawesome/free-solid-svg-icons';
+
 import Map from './Map.jsx';
 import Welcome from './Welcome.jsx';
 import FavoriteList from './FavoriteList.jsx';
@@ -165,8 +165,10 @@ function App() {
     });
   };
 
-  const faTimesX = <span id="fullStar" onClick={() => setRendering('showFav')}><FontAwesomeIcon icon={faBookmark} /></span>;
-
+  const faTimesX = ()=>{
+    setRendering('showFav');
+  }
+  
   const signOut = async () => {
     fetch('/signout');
     changeLoginStatus(false);
@@ -200,17 +202,13 @@ function App() {
         signOut={signOut}
         signInWithGoogle={signInWithGoogle}
       />
-      <p id="favIcon">{faTimesX}</p>
-
-      <Map
-        getPosts={getPosts}
-        setRendering={setRendering}
-      />
+     
       {(loginStatus === true && rendering === 'showFav')
         ? (
           <FavoriteList
             currentFavorites={currentFavorites}
             deleteFavorite={deleteFavorite}
+            
           />
         )
         : (
@@ -220,8 +218,13 @@ function App() {
             setFavorites={setFavorites}
             addFavorite={addFavorite}
             deleteFavorite={deleteFavorite}
+            faTimesX={faTimesX}
           />
         )}
+        <Map
+        getPosts={getPosts}
+        setRendering={setRendering}
+      />
     </div>
   );
 }
