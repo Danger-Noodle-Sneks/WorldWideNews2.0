@@ -7,9 +7,10 @@ function Welcome(props) {
   const { currentUser, signOut, signInWithGoogle } = props;
   return (
     <div id="welcomeDiv">
-      Welcome
+     
       <div>
-        {currentUser}
+        <p>Welcome</p>
+        <p>{currentUser}</p>
       </div>
 
       {currentUser}
