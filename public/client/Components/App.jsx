@@ -1,28 +1,62 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable react/no-array-index-key */
-
-//HELLO
-
 import React, { useEffect, useState } from 'react';
+import { BrowserRouter, Route, Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import fetch from 'isomorphic-fetch';
+
 import Map from './Map.jsx';
-import LogIn from './LogIn.jsx';
 import Welcome from './Welcome.jsx';
 import FavoriteList from './FavoriteList.jsx';
 import NewsFeed from './NewsFeed.jsx';
+import LoginPage from './LoginPage.jsx';
 
 function App() {
   const [currentFavorites, setFavorites] = useState({});
-  const [loginStatus, changeLoginStatus] = useState(false);
+  const [loginStatus, changeLoginStatus] = useState(false);// CHANGED IT FOR NOW
   const [loginAttempt, changeAttempt] = useState(null);
   const [currentUser, changeUser] = useState(null);
-  const [currentCountryClick, setCurrentCountryClick] = useState(null);
   const [posts, setPosts] = useState([]);
+  const [rendering, setRendering] = useState('showFav');
+  const [signInWithGoogle, changeSignInWithGoogle] = useState(false);
+  const [checkedCookies, checkingCookies] = useState(false);
 
-  const loginButton = (e) => {
+  const grabFavoritesFromDB = (data, name) => {
+    if (Array.isArray(data)) {
+      setFavorites({});
+      const favoritesObj = {};
+      data.forEach((elem) => {
+        favoritesObj[elem.title] = elem.link;
+      });
+      setFavorites(favoritesObj);
+      changeUser(name);
+      changeLoginStatus(true);
+    }
+  };
+
+  useEffect(() => {
+    if (!checkedCookies) {
+      checkingCookies(true);
+      (async () => {
+        const res = await (await fetch('/sessionCheck')).json();
+        if (res.length > 0) {
+          const favArticles = {};
+          const [username, articles] = res;
+          articles.forEach((elem) => {
+            favArticles[elem.title] = elem.link;
+          });
+          changeLoginStatus(true);
+          changeUser(username);
+          setFavorites(favArticles);
+        }
+      }
+      )();
+    }
+  });
+
+  const loginButton = () => {
     const username = document.querySelector('#username');
     const password = document.querySelector('#password');
-
     if (username.value === '' || password.value === '') {
       const result = 'Please fill out the username and password fields to log in.';
       changeAttempt(result);
@@ -31,7 +65,7 @@ function App() {
         username: username.value,
         password: password.value,
       };
-      fetch('/api/login', {
+      fetch('/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(user),
@@ -39,23 +73,13 @@ function App() {
       })
         .then((res) => res.json())
         .then((data) => {
-          if (!Array.isArray(data)) throw Error('wrong');
-          if (Array.isArray(data)) {
-            setFavorites({});
-            const favoritesObj = {};
-            data.forEach((elem) => {
-              favoritesObj[elem.title] = elem.link;
-            });
-            setFavorites(favoritesObj);
-            changeUser(username.value);
-            changeLoginStatus(true);
-          }
+          grabFavoritesFromDB(data, username.value);
         })
         .catch((err) => changeAttempt('Incorrect username or password!'));
     }
   };
 
-  const signUp = (e) => {
+  const signUp = () => {
     const username = document.querySelector('#username');
     const password = document.querySelector('#password');
 
@@ -70,7 +94,7 @@ function App() {
         username: username.value,
         password: password.value,
       };
-      fetch('/api/signup', {
+      fetch('/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(user),
@@ -86,20 +110,40 @@ function App() {
     }
   };
 
-  const getPosts = (countryName) => {
-    setTimeout(async () => {
-      const postFetchData = await fetch(`/api/getArticles/${countryName}`);
-      const postsArr = await postFetchData.json();
-      setPosts(postsArr);
-    },
-    1000);
+  const googleLogin = (response) => {
+    const { name, googleId } = response.profileObj;
+    const nameNoSpace = name.replace(' ', '');
+    const user = {
+      username: nameNoSpace,
+      password: googleId,
+    };
+    console.log(user)
+    changeSignInWithGoogle(true);
+    fetch(`/user/loginWithGoogle/${nameNoSpace}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(user),
+
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        grabFavoritesFromDB(data, nameNoSpace);
+      })
+
+      .catch((err) => console.log(err, 'error at google sign in'));
+  };
+
+  const getPosts = async (countryName) => {
+    const postFetchData = await fetch(`/api/getArticles/${countryName}`);
+    const postsArr = await postFetchData.json();
+    setPosts(postsArr);
   };
 
   const addFavorite = (title, link) => {
     const currentFavoritesCopy = { ...currentFavorites };
     const favoriteUpdate = Object.assign(currentFavoritesCopy, { [title]: link });
     setFavorites(favoriteUpdate);
-    fetch('/api/addFav', {
+    fetch('/user/addFav', {
       method: 'POST',
       body: JSON.stringify({ currentUser, title, link }),
       headers: {
@@ -112,7 +156,7 @@ function App() {
     const currentFavoritesCopy = { ...currentFavorites };
     delete currentFavoritesCopy[title];
     setFavorites(currentFavoritesCopy);
-    fetch('/api/deleteFav', {
+    fetch('/user/deleteFav', {
       method: 'DELETE',
       body: JSON.stringify({ currentUser, title, link }),
       headers: {
@@ -121,36 +165,65 @@ function App() {
     });
   };
 
-  const signOut = () => {
+  const faTimesX = ()=>{
+    setRendering('showFav');
+  }
+  
+  const signOut = async () => {
+    fetch('/signout');
     changeLoginStatus(false);
     changeAttempt(null);
     setFavorites({});
     changeUser(null);
-    setCurrentCountryClick(null);
     setPosts([]);
+    changeSignInWithGoogle(false);
   };
-
+  // if not logged in, render the login page
+  if (loginStatus === false) {
+    return (
+      <BrowserRouter>
+        <div>
+          <LoginPage
+            loginButton={loginButton}
+            signUp={signUp}
+            loginAttempt={loginAttempt}
+            googleLogin={googleLogin}
+          />
+        </div>
+      </BrowserRouter>
+    );
+  }
+  // else if logged in, then return the map
   return (
     <div className="wrapper">
-      {!loginStatus
-        ? <LogIn loginButton={loginButton} signUp={signUp} loginAttempt={loginAttempt} />
-        : <Welcome key={1} currentUser={currentUser} signOut={signOut} />}
-      <Map
-        setCurrentCountryClick={setCurrentCountryClick}
+      <Welcome
+        key={1}
+        currentUser={currentUser}
+        signOut={signOut}
+        signInWithGoogle={signInWithGoogle}
+      />
+     
+      {(loginStatus === true && rendering === 'showFav')
+        ? (
+          <FavoriteList
+            currentFavorites={currentFavorites}
+            deleteFavorite={deleteFavorite}
+            
+          />
+        )
+        : (
+          <NewsFeed
+            posts={posts}
+            currentFavorites={currentFavorites}
+            setFavorites={setFavorites}
+            addFavorite={addFavorite}
+            deleteFavorite={deleteFavorite}
+            faTimesX={faTimesX}
+          />
+        )}
+        <Map
         getPosts={getPosts}
-      />
-      <NewsFeed
-        currentCountryClick={currentCountryClick}
-        posts={posts}
-        currentFavorites={currentFavorites}
-        setFavorites={setFavorites}
-        addFavorite={addFavorite}
-        deleteFavorite={deleteFavorite}
-      />
-
-      <FavoriteList
-        currentFavorites={currentFavorites}
-        deleteFavorite={deleteFavorite}
+        setRendering={setRendering}
       />
     </div>
   );

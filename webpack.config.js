@@ -1,5 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const path = require('path');
 
 console.log(`Launching in ${process.env.NODE_ENV} mode`);
@@ -20,12 +21,14 @@ module.exports = {
     },
     compress: true,
     port: 8080,
+    hot: true,
     proxy: {
       '*': {
-        target: 'http://localhost:3000',
+        target: 'http://localhost:3000/',
         changeOrigin: true,
       },
     },
+    historyApiFallback: true,
   },
 
   plugins: [
@@ -33,6 +36,7 @@ module.exports = {
       template: path.join(__dirname, 'public', 'index.html'),
     }),
     new MiniCssExtractPlugin(),
+    // new BundleAnalyzerPlugin(),
   ],
 
   module: {
@@ -43,7 +47,8 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-react'],
+            presets: ['@babel/env', '@babel/preset-react'],
+            plugins: ['@babel/plugin-transform-runtime', '@babel/transform-async-to-generator'],
           },
         },
       },
@@ -58,8 +63,11 @@ module.exports = {
           { loader: 'sass-loader', options: { sourceMap: true } },
         ],
       },
+      {
+        test: /\.(png|jpe?g|gif)$/i,
+        use: ['file-loader'],
+      },
     ],
 
   },
-
 };

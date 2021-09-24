@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 mapboxGl.accessToken = 'pk.eyJ1IjoibGlhbWZvbnRlcyIsImEiOiJja3RsbzdjdmQxeGZxMnBwODJ1aWlpMjgwIn0.tQGIes1AYOO8KIoAJYHTzQ';
 
 function Map(props) {
-  const { setCurrentCountryClick, getPosts } = props;
+  const { getPosts, setRendering } = props;
 
   let popup;
   let populationData;
@@ -56,22 +56,28 @@ function Map(props) {
     const MAP_SOURCE_LAYER = 'country_boundaries';
     const MAP_URL = 'mapbox://mapbox.country-boundaries-v1';
 
+      //$lightGrey: #e8e5da;
+      // $darkGrey: #bbaea4;
+      // $lightPurple: #aaa2d8;
+      // $darkPurple: #8e7fb1;
+      // $lightBlue: #2e6793;
+
     const colorArrFillClickedTrue = [
-      `rgba(${255}, ${0}, ${0}, 1)`,
-      `rgba(${0}, ${255}, ${0}, 1)`,
-      `rgba(${0}, ${0}, ${255}, 1)`,
-      `rgba(${100}, ${0}, ${100}, 1)`,
-      `rgba(${255}, ${0}, ${25}, 1)`,
-      `rgba(${0}, ${200}, ${25}, 1)`,
+      `rgba(${232}, ${229}, ${218}, 1)`,
+      `rgba(${187}, ${174}, ${164}, 1)`,
+      `rgba(${170}, ${162}, ${216}, 1)`,
+      `rgba(${142}, ${127}, ${177}, 1)`,
+      `rgba(${109}, ${131}, ${148}, 1)`,
+      `rgba(${198}, ${186}, ${189}, 1)`,
     ];
 
     const colorArrFillClickedFalse = [
-      `rgba(${255}, ${0}, ${0}, 0.5)`,
-      `rgba(${0}, ${255}, ${0}, 0.5)`,
-      `rgba(${0}, ${0}, ${255}, 0.5)`,
-      `rgba(${100}, ${0}, ${100}, 0.5)`,
-      `rgba(${255}, ${0}, ${25}, 0.5)`,
-      `rgba(${0}, ${200}, ${25}, 0.5)`,
+      `rgba(${232}, ${229}, ${218}, 0.5)`,
+      `rgba(${187}, ${174}, ${164}, 0.5)`,
+      `rgba(${170}, ${162}, ${216}, 0.5)`,
+      `rgba(${142}, ${127}, ${177}, 0.5)`,
+      `rgba(${109}, ${131}, ${148}, 0.5)`,
+      `rgba(${198}, ${186}, ${189}, 0.5)`,
     ];
 
     map.current.on('load', () => {
@@ -172,8 +178,8 @@ function Map(props) {
           clickCountryId = e.features[0].id;
           const countryName = e.features[0].properties.name_en;
           if (clickCountryId !== previousCountryClicked) {
-            setCurrentCountryClick(countryName);
             getPosts(countryName);
+            setRendering('showNews');
             previousCountryClicked = clickCountryId;
           }
 
@@ -231,7 +237,7 @@ function Map(props) {
         },
         paint: {
           'line-color': '#FFFFFF',
-          'line-width': 1,
+          'line-width': 0.5,
         },
       });
     });
@@ -243,8 +249,6 @@ function Map(props) {
 }
 
 Map.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
-  setCurrentCountryClick: PropTypes.any.isRequired,
   getPosts: PropTypes.func.isRequired,
 };
 export default Map;

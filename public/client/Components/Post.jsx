@@ -1,9 +1,8 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar as faStarFilled } from '@fortawesome/free-solid-svg-icons';
-import { faStar as faStarEmpty } from '@fortawesome/free-regular-svg-icons';
+import { faHeart as faHeartFilled } from '@fortawesome/free-solid-svg-icons';
+import { faHeart as faHeartEmpty } from '@fortawesome/free-regular-svg-icons';
 import PropTypes from 'prop-types';
-
 
 const Post = (props) => {
   const {
@@ -14,21 +13,23 @@ const Post = (props) => {
 
   if (currentFavorites[title] === link) favorited = true;
 
-  const starEmpty = <span id="emptyStar" onClick={() => addFavorite(title, link)}><FontAwesomeIcon icon={faStarEmpty} /></span>;
-  const starFull = <span id="fullStar" onClick={() => deleteFavorite(title)}><FontAwesomeIcon icon={faStarFilled} /></span>;
+  const heartEmpty = <span id="emptyStar" onClick={() => addFavorite(title, link)}><FontAwesomeIcon icon={faHeartEmpty} /></span>;
+  const heartFull = <span id="fullStar" onClick={() => deleteFavorite(title)}><FontAwesomeIcon icon={faHeartFilled} /></span>;
 
   return (
-    <section name="Post" id="individualPostWrapper">
-      <div name="Post Title" id="title">
-        Title:
-        {' '}
-        <a href={link}>{title}</a>
-        {' '}
-        {favorited ? starFull : starEmpty}
-        <p name="Article Summary" id="summary">
-          {summary}
-        </p>
+    <section name="Post" id="newsPostWrapper">
+      <div name="Post Title" id="articleTitle">
+        <a id="newsLink" href={link} target="_blank" rel="noreferrer">{title}</a>
+        <div id="favStar">
+          {' '}
+          {favorited ? heartFull : heartEmpty}
+          {' '}
+        </div>
       </div>
+      <div name="Article Summary" id="articleSummary">
+        {summary}
+      </div>
+
     </section>
   );
 };
