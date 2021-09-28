@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 
-const MONGO_URI = 'mongodb+srv://dbUser:codesmith@cluster0.drsef.mongodb.net/worldwidenews?retryWrites=true&w=majority';
+// const MONGO_URI = 'mongodb+srv://dbUser:codesmith@cluster0.drsef.mongodb.net/worldwidenews?retryWrites=true&w=majority';
+
+const MONGO_URI = 'mongodb://127.0.0.1:27017';
 
 const SALT_WORK_FACTOR = 10;
 const bcrypt = require('bcryptjs');

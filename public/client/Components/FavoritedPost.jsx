@@ -3,9 +3,8 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 
-
 const FavoritedPost = (props) => {
-  const { title, link, deleteFavorite} = props;
+  const { title, link, deleteFavorite } = props;
 
   const faHearts = <span id="fullStar" onClick={() => deleteFavorite(title, link)}><FontAwesomeIcon icon={faHeart} /></span>;
 
@@ -16,7 +15,7 @@ const FavoritedPost = (props) => {
         <a id="favoriteLinks" href={link} target="_blank" rel="noreferrer">{title}</a>
       </div>
       <div id="removingFav">{faHearts}</div>
-      
+
     </section>
   );
 };

@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 mapboxGl.accessToken = 'pk.eyJ1IjoibGlhbWZvbnRlcyIsImEiOiJja3RsbzdjdmQxeGZxMnBwODJ1aWlpMjgwIn0.tQGIes1AYOO8KIoAJYHTzQ';
 
 function Map(props) {
+  const countryPopCache = {};
   const { getPosts, setRendering } = props;
 
   let popup;
@@ -35,6 +36,15 @@ function Map(props) {
     }
   };
 
+  const createPopup = (e, name, population) => {
+    popup = new mapboxGl.Popup({ closeOnMove: true })
+      .setLngLat([e.lngLat.lng, e.lngLat.lat])
+      .setHTML(`
+                  <p>Country: ${name} </p><p>Population: ${population.toLocaleString()} </p>`)
+      .addTo(map.current);
+    popup.addClassName('popup');
+  };
+
   useEffect(() => {
     if (map.current) return; // initialize map only once
     map.current = new mapboxGl.Map({
@@ -55,12 +65,6 @@ function Map(props) {
     const MAP_ID3 = 'disputed country boundary line';
     const MAP_SOURCE_LAYER = 'country_boundaries';
     const MAP_URL = 'mapbox://mapbox.country-boundaries-v1';
-
-      //$lightGrey: #e8e5da;
-      // $darkGrey: #bbaea4;
-      // $lightPurple: #aaa2d8;
-      // $darkPurple: #8e7fb1;
-      // $lightBlue: #2e6793;
 
     const colorArrFillClickedTrue = [
       `rgba(${232}, ${229}, ${218}, 1)`,
@@ -127,7 +131,6 @@ function Map(props) {
         // 'mapboxgl-popup mapboxgl-popup-anchor-bottom popup';
         // eslint-disable-next-line no-loop-func
         map.current.on('mousemove', `${MAP_ID}+${i}`, (e) => {
-          removePopups();
           const countryName = e.features[0].properties.name_en;
           if (e.features.length > 0) {
             if (hoveredCountryId !== null) {
@@ -142,25 +145,22 @@ function Map(props) {
             }
             hoveredCountryId = e.features[0].id;
             if (previousCountryHover !== hoveredCountryId) {
-              fetchPopulationData(countryName)
-                .then((data) => {
-                  populationData = data;
-                  popup = new mapboxGl.Popup({ closeOnMove: true })
-                    .setLngLat([e.lngLat.lng, e.lngLat.lat])
-                    .setHTML(`
-                  <p>Country: ${countryName} </p><p>Population: ${populationData.toLocaleString()} </p>`)
-                    .addTo(map.current);
-                  popup.addClassName('popup');
-                })
-                .catch((err) => console.log(err));
+              if (countryPopCache[countryName]) {
+                populationData = countryPopCache[countryName];
+                createPopup(e, countryName, populationData);
+              } else {
+                fetchPopulationData(countryName)
+                  .then((data) => {
+                    populationData = data;
+                    countryPopCache[countryName] = populationData;
+                    createPopup(e, countryName, populationData);
+                  })
+                  .catch((err) => console.log(err));
+              }
             } else {
-              popup = new mapboxGl.Popup({ closeOnMove: true })
-                .setLngLat([e.lngLat.lng, e.lngLat.lat])
-                .setHTML(`
-                <p>Country: ${countryName} </p><p>Population: ${populationData.toLocaleString()} </p>`)
-                .addTo(map.current);
-              popup.addClassName('popup');
+              popup.setLngLat([e.lngLat.lng, e.lngLat.lat]);
             }
+
             previousCountryHover = hoveredCountryId;
 
             map.current.setFeatureState(
