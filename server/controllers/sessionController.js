@@ -29,11 +29,9 @@ sessionController.isLoggedIn = async (req, res, next) => {
 */
 sessionController.startSession = async (req, res, next) => {
   try {
-    // check is session already exists
     const session = await models.Session.findOne({ cookieId: res.locals.user });
 
     if (!session) {
-    // create new session document
       const newSession = {
         cookieId: res.locals.user,
       };

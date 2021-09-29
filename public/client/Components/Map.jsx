@@ -131,6 +131,7 @@ function Map(props) {
         // 'mapboxgl-popup mapboxgl-popup-anchor-bottom popup';
         // eslint-disable-next-line no-loop-func
         map.current.on('mousemove', `${MAP_ID}+${i}`, (e) => {
+          removePopups();
           const countryName = e.features[0].properties.name_en;
           if (e.features.length > 0) {
             if (hoveredCountryId !== null) {
@@ -158,7 +159,7 @@ function Map(props) {
                   .catch((err) => console.log(err));
               }
             } else {
-              popup.setLngLat([e.lngLat.lng, e.lngLat.lat]);
+              createPopup(e, countryName, populationData);
             }
 
             previousCountryHover = hoveredCountryId;

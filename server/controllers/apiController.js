@@ -73,19 +73,21 @@ apiController.getArticles = async (req, res, next) => {
   axios.request(requestDetails)
     .then((response) => {
       const previousTitles = {};
-      const articles = response.data.articles.map((elem) => {
-        if (!previousTitles[elem.title] && elem.summary.length > 400) {
-          previousTitles[elem.title] = true;
-          return {
-            title: elem.title,
-            summary: elem.summary,
-            link: elem.link,
+      const filteredArticles = [];
+      for (let i = 0; i < response.data.articles.length; i++) {
+        const article = response.data.articles[i];
+        if (!previousTitles[article.title] && article.summary.length > 400) {
+          previousTitles[article.title] = true;
+          const post = {
+            title: article.title,
+            summary: article.summary,
+            link: article.link,
           };
+          filteredArticles.push(post);
         }
-      });
-      const articlesFiltered = articles.filter((post) => post !== undefined);
-      articlesCache[countryName] = articlesFiltered;
-      res.locals.articles = articlesFiltered;
+      }
+      articlesCache[countryName] = filteredArticles;
+      res.locals.articles = filteredArticles;
 
       return next();
     }).catch((err) => {
