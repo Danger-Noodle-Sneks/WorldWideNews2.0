@@ -13,3 +13,5 @@ Our goal is to provide all users the ability to quickly and easily access news s
 The website should open automatically; you will begin on the log-in page where you can choose to use Google's O-Auth or create your own account. 
 
 If you made it this far, congratulations! Enjoy reading about the current news stories from around the world.
+
+<iframe src="https://giphy.com/embed/OJDnLWU3xKFn9ATEAx" width="480" height="248" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/OJDnLWU3xKFn9ATEAx">via GIPHY</a></p>
