@@ -2,7 +2,6 @@
 /* eslint-disable react/no-array-index-key */
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import fetch from 'isomorphic-fetch';
 
 import Map from './Map.jsx';
@@ -13,7 +12,7 @@ import LoginPage from './LoginPage.jsx';
 
 function App() {
   const [currentFavorites, setFavorites] = useState({});
-  const [loginStatus, changeLoginStatus] = useState(false);// CHANGED IT FOR NOW
+  const [loginStatus, changeLoginStatus] = useState(false);
   const [loginAttempt, changeAttempt] = useState(null);
   const [currentUser, changeUser] = useState(null);
   const [posts, setPosts] = useState([]);
@@ -136,7 +135,8 @@ function App() {
   const getPosts = async (countryName) => {
     const postFetchData = await fetch(`/api/getArticles/${countryName}`);
     const postsArr = await postFetchData.json();
-    setPosts(postsArr);
+    if (Array.isArray(postsArr)) setPosts(postsArr);
+    else setPosts([{title: 'Cannot Load articles', link: '', summary: 'Click on another country to retrieve news.'}])
   };
 
   const addFavorite = (title, link) => {

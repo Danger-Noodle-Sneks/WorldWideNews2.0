@@ -57,7 +57,6 @@ userController.verifyUser = async (req, res, next) => {
   }
 };
 
-// code to get the favourite article links of the user
 userController.getUserData = async (req, res, next) => {
   try {
     const user = await models.Users.findOne({ username: res.locals.user });
@@ -100,7 +99,6 @@ userController.googleSignIn = async (req, res, next) => {
   }
 };
 
-// function to add an article link as a favourite
 
 userController.addFav = async (req, res, next) => {
   try {
@@ -130,7 +128,6 @@ userController.addFav = async (req, res, next) => {
   }
 };
 
-// add a function to delete an article from the favourite tag
 userController.deleteFav = async (req, res, next) => {
   try {
     const { currentUser, title, link } = req.body;

@@ -3,13 +3,21 @@ import PropTypes from 'prop-types';
 import FavoritedPost from './FavoritedPost.jsx';
 
 function FavoriteList(props) {
-  const { currentFavorites, deleteFavorite,faTimesX } = props;
+  const { currentFavorites, deleteFavorite } = props;
 
   const favoritedPosts = [];
   let counter = 0;
 
+  // eslint-disable-next-line no-restricted-syntax
   for (const [title, link] of Object.entries(currentFavorites)) {
-    favoritedPosts.push(<FavoritedPost key={counter++} title={title} link={link} deleteFavorite={deleteFavorite} />);
+    favoritedPosts.push(
+      <FavoritedPost
+        key={counter++}
+        title={title}
+        link={link}
+        deleteFavorite={deleteFavorite}
+      />,
+    );
   }
 
   return (

@@ -23,7 +23,6 @@ const Post = (props) => {
         <div id="favStar">
           {' '}
           {favorited ? heartFull : heartEmpty}
-          {' '}
         </div>
       </div>
       <div name="Article Summary" id="articleSummary">
